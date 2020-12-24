@@ -1,0 +1,76 @@
+{
+  "name": "telar-cli",
+  "description": "This is a CLI for scaffolding, building and deploying a server-less/monolithic projects based on @telar/core.",
+  "version": "0.0.3",
+  "author": "Amir Movahedi @Qolzam",
+  "bin": {
+    "telar": "./bin/run"
+  },
+  "bugs": "https://github.com/Qolzam/telar-cli-js/issues",
+  "dependencies": {
+    "@oclif/command": "^1",
+    "@oclif/config": "^1",
+    "@oclif/plugin-help": "^3",
+    "deepmerge": "^4.2.2",
+    "del": "^6.0.0",
+    "fs-extra": "^9.0.1",
+    "hybrid-crypto-js": "^0.2.4",
+    "js-yaml": "^3.14.1",
+    "shelljs": "^0.8.4",
+    "tslib": "^1"
+  },
+  "devDependencies": {
+    "@oclif/dev-cli": "^1",
+    "@oclif/test": "^1",
+    "@types/chai": "^4",
+    "@types/del": "^4.0.0",
+    "@types/fs-extra": "8.1.0",
+    "@types/js-yaml": "^3.12.5",
+    "@types/mocha": "^5",
+    "@types/node": "^10",
+    "@types/shelljs": "^0.8.8",
+    "chai": "^4",
+    "eslint": "^5.13",
+    "eslint-config-oclif": "^3.1",
+    "eslint-config-oclif-typescript": "^0.1",
+    "globby": "^10",
+    "mocha": "^5",
+    "nyc": "^14",
+    "ts-node": "^8",
+    "typescript": "^3.3"
+  },
+  "engines": {
+    "node": ">=10.0.0"
+  },
+  "files": [
+    "/bin",
+    "/lib",
+    "/npm-shrinkwrap.json",
+    "/oclif.manifest.json"
+  ],
+  "homepage": "https://github.com/Qolzam/telar-cli-js",
+  "keywords": [
+    "oclif",
+    "telar",
+    "telar-cli",
+    "telar-core"
+  ],
+  "license": "MIT",
+  "main": "lib/index.js",
+  "oclif": {
+    "commands": "./lib/commands",
+    "bin": "telar",
+    "plugins": [
+      "@oclif/plugin-help"
+    ]
+  },
+  "repository": "Qolzam/telar-cli-js",
+  "scripts": {
+    "postpack": "rm -f oclif.manifest.json",
+    "posttest": "eslint . --ext .ts --config .eslintrc",
+    "prepack": "rm -rf lib && tsc -b && oclif-dev manifest && oclif-dev readme",
+    "test": "nyc --extension .ts mocha --forbid-only \"test/**/*.test.ts\"",
+    "version": "oclif-dev readme && git add README.md"
+  },
+  "types": "lib/index.d.ts"
+}
