@@ -12,18 +12,20 @@ export default class Seal extends Command {
     `  telar seal --literal db-pass=p@55w0rd
   telar seal --from-file api-key.txt
   telar seal --literal a=b --literal c=d --cert public.key --output-file secrets.yml
-  telar seal --gen`,
+  telar seal --gen secret --pk-base64`,
   ]
 
   static flags = {
     // Help
     help: flags.help({char: 'h'}),
     // Generate key pair
-    gen: flags.boolean({char: 'g', description: 'Generate key pair'}),
+    gen: flags.string({char: 'g', description: 'Generate key pair'}),
+    // Whether generate base64 version of private key or not
+    'pk-base64': flags.boolean({default: false, description: 'Whether generate base64 version of private key or not'}),
     // Output secret file name
-    'output-file': flags.string({char: 'o', env: 'secrets.yml', description: 'Output file for secrets'}),
+    'output-file': flags.string({char: 'o', default: 'secrets.yml', description: 'Output file for secrets'}),
     // Public key
-    cert: flags.string({char: 'c', env: 'public.key', description: 'The path to the public key file. Default is public.key'}),
+    cert: flags.string({char: 'c', default: 'secret-public.key', description: 'The path to the public key file. Default is secret-public.key'}),
     // Literal
     literal: flags.string({char: 'l', multiple: true, description: 'Secret literal key-value data'}),
     // From file
@@ -36,7 +38,9 @@ export default class Seal extends Command {
     const {flags} = this.parse(Seal)
 
     if (flags.gen) {
-      await generateKeyPair()
+      this.log('Generate flag presented ', flags.gen)
+
+      await generateKeyPair(flags.gen, flags['pk-base64'])
       this.log('KeyPair files generated')
     }
 
@@ -52,7 +56,7 @@ export default class Seal extends Command {
     let secretObj = {}
     if (flags.literal && flags.literal.length > 0) {
       flags.literal.forEach(item => {
-        const keyValue = item.split('=')
+        const keyValue = [item.substr(0, item.indexOf('=')), item.substr(item.indexOf('=') + 1)]
         secretObj = {...secretObj, [keyValue[0]]: crypt.encrypt(keyValue[1], key!)}
       })
     }
@@ -63,7 +67,9 @@ export default class Seal extends Command {
         secretObj = {...secretObj, [fileName]: crypt.encrypt(fs.readFileSync(path.resolve(item), 'utf8'), key!)}
       })
     }
-
+    if (Object.keys(secretObj).length === 0) {
+      return
+    }
     createYaml({
       secret: secretObj,
     }, flags['output-file'] || 'secrets.yml')

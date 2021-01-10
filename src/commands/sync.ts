@@ -12,7 +12,7 @@ export default class Sync extends Command {
     // Help
     help: flags.help({char: 'h'}),
     // Stack file path
-    file: flags.string({char: 'f', env: 'stack.yml', description: 'Stack file path'}),
+    file: flags.string({char: 'f', default: 'stack.yml', description: 'Stack file path'}),
   }
 
   static args = [{name: 'target'}]
