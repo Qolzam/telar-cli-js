@@ -1,29 +1,31 @@
-import {Command, flags} from '@oclif/command'
+import {Command, Flags} from '@oclif/core'
 import * as shell from 'shelljs'
 import * as fs from 'fs-extra'
-import * as path from 'path'
-import * as os from 'os'
+import * as path from 'node:path'
+import * as os from 'node:os'
 
 const defaultTemplateRepository = 'https://github.com/Qolzam/platforms.git'
 export default class Platform extends Command {
-  static description = 'Fetch platforms which using @telar/core project'
+  static description = 'Fetch platforms which using @telar/core project';
 
   static examples = [
     '$ telar platform',
     '$ telar platform pull https://github.com/Qolzam/platforms.git',
-  ]
+  ];
 
   static flags = {
     // Help
-    help: flags.help({char: 'h'}),
-  }
+    help: Flags.help({char: 'h'}),
+  };
 
-  static args = [{name: 'arg1'}, {name: 'arg2'}]
+  static args = [{name: 'arg1'}, {name: 'arg2'}];
 
   async run() {
-    const {args} = this.parse(Platform)
+    const {args} = await this.parse(Platform)
     if (!shell.which('git')) {
-      this.error('Sorry, git command does not exist! Please install git and run this command again.')
+      this.error(
+        'Sorry, git command does not exist! Please install git and run this command again.',
+      )
     }
 
     let targetRepo = defaultTemplateRepository
@@ -48,6 +50,10 @@ export default class Platform extends Command {
     const targetPath = path.join(currentDirectory, 'platform')
     shell.cp('-R', platformPath, targetPath)
     const platformDirs = shell.ls(targetPath)
-    this.log(`Fetched ${platformDirs.length} platforms(s) : [ ${platformDirs.join(', ')} ]`)
+    this.log(
+      `Fetched ${platformDirs.length} platforms(s) : [ ${platformDirs.join(
+        ', ',
+      )} ]`,
+    )
   }
 }

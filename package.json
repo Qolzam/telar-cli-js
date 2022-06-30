@@ -14,8 +14,7 @@
     "/bin",
     "/dist",
     "/npm-shrinkwrap.json",
-    "/oclif.manifest.json",
-    "src"
+    "/oclif.manifest.json"
   ],
   "dependencies": {
     "@oclif/core": "^1",
@@ -24,7 +23,8 @@
     "fs-extra": "^10.1.0",
     "html-minifier-terser": "^7.0.0-alpha.2",
     "http-proxy": "^1.18.1",
-    "js-yaml": "^4.1.0"
+    "js-yaml": "^4.1.0",
+    "shelljs": "^0.8.5"
   },
   "devDependencies": {
     "@oclif/command": "^1.8.16",
