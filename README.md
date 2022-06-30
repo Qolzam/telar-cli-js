@@ -22,7 +22,7 @@ $ npm install -g telar-cli
 $ telar COMMAND
 running command...
 $ telar (--version)
-telar-cli/0.4.0 darwin-arm64 node-v16.13.1
+telar-cli/0.5.0 darwin-arm64 node-v16.13.1
 $ telar --help [COMMAND]
 USAGE
   $ telar COMMAND
@@ -86,7 +86,7 @@ EXAMPLES
   $ telar html compile ./auth
 ```
 
-_See code: [dist/commands/html.ts](https://github.com/Qolzam/telar-cli-js/blob/v0.4.0/dist/commands/html.ts)_
+_See code: [dist/commands/html.ts](https://github.com/Qolzam/telar-cli-js/blob/v0.5.0/dist/commands/html.ts)_
 
 ## `telar platform [ARG1] [ARG2]`
 
@@ -108,7 +108,7 @@ EXAMPLES
   $ telar platform pull https://github.com/Qolzam/platforms.git
 ```
 
-_See code: [dist/commands/platform.ts](https://github.com/Qolzam/telar-cli-js/blob/v0.4.0/dist/commands/platform.ts)_
+_See code: [dist/commands/platform.ts](https://github.com/Qolzam/telar-cli-js/blob/v0.5.0/dist/commands/platform.ts)_
 
 ## `telar plugins`
 
@@ -360,7 +360,7 @@ EXAMPLES
   $ telar proxy -p 80 -t http://social.example.com:4000
 ```
 
-_See code: [dist/commands/proxy.ts](https://github.com/Qolzam/telar-cli-js/blob/v0.4.0/dist/commands/proxy.ts)_
+_See code: [dist/commands/proxy.ts](https://github.com/Qolzam/telar-cli-js/blob/v0.5.0/dist/commands/proxy.ts)_
 
 ## `telar sync [TARGET]`
 
@@ -381,5 +381,5 @@ EXAMPLES
   $ telar sync vercel
 ```
 
-_See code: [dist/commands/sync.ts](https://github.com/Qolzam/telar-cli-js/blob/v0.4.0/dist/commands/sync.ts)_
+_See code: [dist/commands/sync.ts](https://github.com/Qolzam/telar-cli-js/blob/v0.5.0/dist/commands/sync.ts)_
 <!-- commandsstop -->
