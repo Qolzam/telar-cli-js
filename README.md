@@ -9,47 +9,40 @@ Telar necessary tools
 [![License](https://img.shields.io/npm/l/telar-cli.svg)](https://github.com/Qolzam/telar-cli/blob/main/package.json)
 
 <!-- toc -->
-
-- [Usage](#usage)
-- [Commands](#commands)
+* [telar-cli](#telar-cli)
+* [Usage](#usage)
+* [Commands](#commands)
 <!-- tocstop -->
 
 # Usage
 
 <!-- usage -->
-
 ```sh-session
 $ npm install -g telar-cli
 $ telar COMMAND
 running command...
 $ telar (--version)
-telar-cli/0.2.0 linux-x64 node-v16.15.0
+telar-cli/0.3.0 darwin-arm64 node-v16.13.1
 $ telar --help [COMMAND]
 USAGE
   $ telar COMMAND
 ...
 ```
-
 <!-- usagestop -->
 
 # Commands
 
 <!-- commands -->
-
-- [`telar help [COMMAND]`](#telar-help-command)
-- [`telar html [ARG0] [PATH]`](#telar-html-arg0-path)
-- [`telar platform [ARG1] [ARG2]`](#telar-platform-arg1-arg2)
-- [`telar plugins`](#telar-plugins)
-- [`telar plugins:install PLUGIN...`](#telar-pluginsinstall-plugin)
-- [`telar plugins:inspect PLUGIN...`](#telar-pluginsinspect-plugin)
-- [`telar plugins:install PLUGIN...`](#telar-pluginsinstall-plugin-1)
-- [`telar plugins:link PLUGIN`](#telar-pluginslink-plugin)
-- [`telar plugins:uninstall PLUGIN...`](#telar-pluginsuninstall-plugin)
-- [`telar plugins:uninstall PLUGIN...`](#telar-pluginsuninstall-plugin-1)
-- [`telar plugins:uninstall PLUGIN...`](#telar-pluginsuninstall-plugin-2)
-- [`telar plugins update`](#telar-plugins-update)
-- [`telar proxy`](#telar-proxy)
-- [`telar sync [TARGET]`](#telar-sync-target)
+* [`telar help [COMMAND]`](#telar-help-command)
+* [`telar plugins`](#telar-plugins)
+* [`telar plugins:install PLUGIN...`](#telar-pluginsinstall-plugin)
+* [`telar plugins:inspect PLUGIN...`](#telar-pluginsinspect-plugin)
+* [`telar plugins:install PLUGIN...`](#telar-pluginsinstall-plugin-1)
+* [`telar plugins:link PLUGIN`](#telar-pluginslink-plugin)
+* [`telar plugins:uninstall PLUGIN...`](#telar-pluginsuninstall-plugin)
+* [`telar plugins:uninstall PLUGIN...`](#telar-pluginsuninstall-plugin-1)
+* [`telar plugins:uninstall PLUGIN...`](#telar-pluginsuninstall-plugin-2)
+* [`telar plugins update`](#telar-plugins-update)
 
 ## `telar help [COMMAND]`
 
@@ -70,48 +63,6 @@ DESCRIPTION
 ```
 
 _See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v5.1.10/src/commands/help.ts)_
-
-## `telar html [ARG0] [PATH]`
-
-compile html template file to a Javascript compile function
-
-```
-USAGE
-  $ telar html [ARG0] [PATH] [-h]
-
-FLAGS
-  -h, --help  show CLI help
-
-DESCRIPTION
-  compile html template file to a Javascript compile function
-
-EXAMPLES
-  $ telar html compile ./auth
-```
-
-_See code: [dist/commands/html.ts](https://github.com/Qolzam/telar-cli-js/blob/v0.2.0/dist/commands/html.ts)_
-
-## `telar platform [ARG1] [ARG2]`
-
-Fetch platforms which using @telar/core project
-
-```
-USAGE
-  $ telar platform [ARG1] [ARG2] [-h]
-
-FLAGS
-  -h, --help  show CLI help
-
-DESCRIPTION
-  Fetch platforms which using @telar/core project
-
-EXAMPLES
-  $ telar platform
-
-  $ telar platform pull https://github.com/Qolzam/platforms.git
-```
-
-_See code: [dist/commands/platform.ts](https://github.com/Qolzam/telar-cli-js/blob/v0.2.0/dist/commands/platform.ts)_
 
 ## `telar plugins`
 
@@ -164,7 +115,7 @@ ALIASES
   $ telar plugins add
 
 EXAMPLES
-  $ telar plugins:install myplugin
+  $ telar plugins:install myplugin 
 
   $ telar plugins:install https://github.com/someuser/someplugin
 
@@ -224,7 +175,7 @@ ALIASES
   $ telar plugins add
 
 EXAMPLES
-  $ telar plugins:install myplugin
+  $ telar plugins:install myplugin 
 
   $ telar plugins:install https://github.com/someuser/someplugin
 
@@ -342,48 +293,4 @@ FLAGS
 DESCRIPTION
   Update installed plugins.
 ```
-
-## `telar proxy`
-
-run a proxy server
-
-```
-USAGE
-  $ telar proxy [-h] [-p <value>] [-t <value>]
-
-FLAGS
-  -h, --help            show CLI help
-  -p, --port=<value>    [default: 80] Income port
-  -t, --target=<value>  [default: http://social.example.com:4000] Proxy server target
-
-DESCRIPTION
-  run a proxy server
-
-EXAMPLES
-  $ telar proxy -p 80 -t http://social.example.com:4000
-```
-
-_See code: [dist/commands/proxy.ts](https://github.com/Qolzam/telar-cli-js/blob/v0.2.0/dist/commands/proxy.ts)_
-
-## `telar sync [TARGET]`
-
-sync @telar/core project with target platform
-
-```
-USAGE
-  $ telar sync [TARGET] [-h] [-f <value>]
-
-FLAGS
-  -f, --file=<value>  [default: stack.yml] Stack file path
-  -h, --help          show CLI help
-
-DESCRIPTION
-  sync @telar/core project with target platform
-
-EXAMPLES
-  $ telar sync vercel
-```
-
-_See code: [dist/commands/sync.ts](https://github.com/Qolzam/telar-cli-js/blob/v0.2.0/dist/commands/sync.ts)_
-
 <!-- commandsstop -->
