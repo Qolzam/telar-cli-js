@@ -22,7 +22,7 @@ $ npm install -g telar-cli
 $ telar COMMAND
 running command...
 $ telar (--version)
-telar-cli/0.5.0 darwin-arm64 node-v16.13.1
+telar-cli/0.6.0 darwin-arm64 node-v16.13.1
 $ telar --help [COMMAND]
 USAGE
   $ telar COMMAND
@@ -77,7 +77,7 @@ USAGE
   $ telar html [ARG0] [PATH] [-h]
 
 FLAGS
-  -h, --help  show CLI help
+  -h, --help  Show CLI help.
 
 DESCRIPTION
   compile html template file to a Javascript compile function
@@ -86,7 +86,7 @@ EXAMPLES
   $ telar html compile ./auth
 ```
 
-_See code: [dist/commands/html.ts](https://github.com/Qolzam/telar-cli-js/blob/v0.5.0/dist/commands/html.ts)_
+_See code: [dist/commands/html.ts](https://github.com/Qolzam/telar-cli-js/blob/v0.6.0/dist/commands/html.ts)_
 
 ## `telar platform [ARG1] [ARG2]`
 
@@ -97,7 +97,7 @@ USAGE
   $ telar platform [ARG1] [ARG2] [-h]
 
 FLAGS
-  -h, --help  show CLI help
+  -h, --help  Show CLI help.
 
 DESCRIPTION
   Fetch platforms which using @telar/core project
@@ -108,7 +108,7 @@ EXAMPLES
   $ telar platform pull https://github.com/Qolzam/platforms.git
 ```
 
-_See code: [dist/commands/platform.ts](https://github.com/Qolzam/telar-cli-js/blob/v0.5.0/dist/commands/platform.ts)_
+_See code: [dist/commands/platform.ts](https://github.com/Qolzam/telar-cli-js/blob/v0.6.0/dist/commands/platform.ts)_
 
 ## `telar plugins`
 
@@ -349,7 +349,7 @@ USAGE
   $ telar proxy [-h] [-p <value>] [-t <value>]
 
 FLAGS
-  -h, --help            show CLI help
+  -h, --help            Show CLI help.
   -p, --port=<value>    [default: 80] Income port
   -t, --target=<value>  [default: http://social.example.com:4000] Proxy server target
 
@@ -360,7 +360,7 @@ EXAMPLES
   $ telar proxy -p 80 -t http://social.example.com:4000
 ```
 
-_See code: [dist/commands/proxy.ts](https://github.com/Qolzam/telar-cli-js/blob/v0.5.0/dist/commands/proxy.ts)_
+_See code: [dist/commands/proxy.ts](https://github.com/Qolzam/telar-cli-js/blob/v0.6.0/dist/commands/proxy.ts)_
 
 ## `telar sync [TARGET]`
 
@@ -372,7 +372,7 @@ USAGE
 
 FLAGS
   -f, --file=<value>  [default: stack.yml] Stack file path
-  -h, --help          show CLI help
+  -h, --help          Show CLI help.
 
 DESCRIPTION
   sync @telar/core project with target platform
@@ -381,5 +381,5 @@ EXAMPLES
   $ telar sync vercel
 ```
 
-_See code: [dist/commands/sync.ts](https://github.com/Qolzam/telar-cli-js/blob/v0.5.0/dist/commands/sync.ts)_
+_See code: [dist/commands/sync.ts](https://github.com/Qolzam/telar-cli-js/blob/v0.6.0/dist/commands/sync.ts)_
 <!-- commandsstop -->
