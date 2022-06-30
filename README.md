@@ -1,20 +1,23 @@
-oclif-hello-world
-=================
+# telar-cli
 
 oclif example Hello World CLI
 
 [![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
-[![Version](https://img.shields.io/npm/v/oclif-hello-world.svg)](https://npmjs.org/package/oclif-hello-world)
-[![CircleCI](https://circleci.com/gh/oclif/hello-world/tree/main.svg?style=shield)](https://circleci.com/gh/oclif/hello-world/tree/main)
-[![Downloads/week](https://img.shields.io/npm/dw/oclif-hello-world.svg)](https://npmjs.org/package/oclif-hello-world)
-[![License](https://img.shields.io/npm/l/oclif-hello-world.svg)](https://github.com/oclif/hello-world/blob/main/package.json)
+[![Version](https://img.shields.io/npm/v/telar-cli.svg)](https://npmjs.org/package/telar-cli)
+[![CircleCI](https://circleci.com/gh/Qolzam/telar-cli-js/tree/main.svg?style=shield)](https://circleci.com/gh/Qolzam/telar-cli-js/tree/main)
+[![Downloads/week](https://img.shields.io/npm/dw/telar-cli.svg)](https://npmjs.org/package/telar-cli)
+[![License](https://img.shields.io/npm/l/telar-cli.svg)](https://github.com/Qolzam/telar-cli/blob/main/package.json)
 
 <!-- toc -->
-* [Usage](#usage)
-* [Commands](#commands)
+
+- [Usage](#usage)
+- [Commands](#commands)
 <!-- tocstop -->
+
 # Usage
+
 <!-- usage -->
+
 ```sh-session
 $ npm install -g telar-cli
 $ telar COMMAND
@@ -26,23 +29,27 @@ USAGE
   $ telar COMMAND
 ...
 ```
+
 <!-- usagestop -->
+
 # Commands
+
 <!-- commands -->
-* [`telar help [COMMAND]`](#telar-help-command)
-* [`telar html [ARG0] [PATH]`](#telar-html-arg0-path)
-* [`telar platform [ARG1] [ARG2]`](#telar-platform-arg1-arg2)
-* [`telar plugins`](#telar-plugins)
-* [`telar plugins:install PLUGIN...`](#telar-pluginsinstall-plugin)
-* [`telar plugins:inspect PLUGIN...`](#telar-pluginsinspect-plugin)
-* [`telar plugins:install PLUGIN...`](#telar-pluginsinstall-plugin-1)
-* [`telar plugins:link PLUGIN`](#telar-pluginslink-plugin)
-* [`telar plugins:uninstall PLUGIN...`](#telar-pluginsuninstall-plugin)
-* [`telar plugins:uninstall PLUGIN...`](#telar-pluginsuninstall-plugin-1)
-* [`telar plugins:uninstall PLUGIN...`](#telar-pluginsuninstall-plugin-2)
-* [`telar plugins update`](#telar-plugins-update)
-* [`telar proxy`](#telar-proxy)
-* [`telar sync [TARGET]`](#telar-sync-target)
+
+- [`telar help [COMMAND]`](#telar-help-command)
+- [`telar html [ARG0] [PATH]`](#telar-html-arg0-path)
+- [`telar platform [ARG1] [ARG2]`](#telar-platform-arg1-arg2)
+- [`telar plugins`](#telar-plugins)
+- [`telar plugins:install PLUGIN...`](#telar-pluginsinstall-plugin)
+- [`telar plugins:inspect PLUGIN...`](#telar-pluginsinspect-plugin)
+- [`telar plugins:install PLUGIN...`](#telar-pluginsinstall-plugin-1)
+- [`telar plugins:link PLUGIN`](#telar-pluginslink-plugin)
+- [`telar plugins:uninstall PLUGIN...`](#telar-pluginsuninstall-plugin)
+- [`telar plugins:uninstall PLUGIN...`](#telar-pluginsuninstall-plugin-1)
+- [`telar plugins:uninstall PLUGIN...`](#telar-pluginsuninstall-plugin-2)
+- [`telar plugins update`](#telar-plugins-update)
+- [`telar proxy`](#telar-proxy)
+- [`telar sync [TARGET]`](#telar-sync-target)
 
 ## `telar help [COMMAND]`
 
@@ -157,7 +164,7 @@ ALIASES
   $ telar plugins add
 
 EXAMPLES
-  $ telar plugins:install myplugin 
+  $ telar plugins:install myplugin
 
   $ telar plugins:install https://github.com/someuser/someplugin
 
@@ -217,7 +224,7 @@ ALIASES
   $ telar plugins add
 
 EXAMPLES
-  $ telar plugins:install myplugin 
+  $ telar plugins:install myplugin
 
   $ telar plugins:install https://github.com/someuser/someplugin
 
@@ -378,4 +385,5 @@ EXAMPLES
 ```
 
 _See code: [dist/commands/sync.ts](https://github.com/Qolzam/telar-cli-js/blob/v0.2.0/dist/commands/sync.ts)_
+
 <!-- commandsstop -->
