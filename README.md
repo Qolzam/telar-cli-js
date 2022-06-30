@@ -9,14 +9,16 @@ Telar necessary tools
 [![License](https://img.shields.io/npm/l/telar-cli.svg)](https://github.com/Qolzam/telar-cli/blob/main/package.json)
 
 <!-- toc -->
-* [telar-cli](#telar-cli)
-* [Usage](#usage)
-* [Commands](#commands)
+
+- [telar-cli](#telar-cli)
+- [Usage](#usage)
+- [Commands](#commands)
 <!-- tocstop -->
 
 # Usage
 
 <!-- usage -->
+
 ```sh-session
 $ npm install -g telar-cli
 $ telar COMMAND
@@ -28,21 +30,23 @@ USAGE
   $ telar COMMAND
 ...
 ```
+
 <!-- usagestop -->
 
 # Commands
 
 <!-- commands -->
-* [`telar help [COMMAND]`](#telar-help-command)
-* [`telar plugins`](#telar-plugins)
-* [`telar plugins:install PLUGIN...`](#telar-pluginsinstall-plugin)
-* [`telar plugins:inspect PLUGIN...`](#telar-pluginsinspect-plugin)
-* [`telar plugins:install PLUGIN...`](#telar-pluginsinstall-plugin-1)
-* [`telar plugins:link PLUGIN`](#telar-pluginslink-plugin)
-* [`telar plugins:uninstall PLUGIN...`](#telar-pluginsuninstall-plugin)
-* [`telar plugins:uninstall PLUGIN...`](#telar-pluginsuninstall-plugin-1)
-* [`telar plugins:uninstall PLUGIN...`](#telar-pluginsuninstall-plugin-2)
-* [`telar plugins update`](#telar-plugins-update)
+
+- [`telar help [COMMAND]`](#telar-help-command)
+- [`telar plugins`](#telar-plugins)
+- [`telar plugins:install PLUGIN...`](#telar-pluginsinstall-plugin)
+- [`telar plugins:inspect PLUGIN...`](#telar-pluginsinspect-plugin)
+- [`telar plugins:install PLUGIN...`](#telar-pluginsinstall-plugin-1)
+- [`telar plugins:link PLUGIN`](#telar-pluginslink-plugin)
+- [`telar plugins:uninstall PLUGIN...`](#telar-pluginsuninstall-plugin)
+- [`telar plugins:uninstall PLUGIN...`](#telar-pluginsuninstall-plugin-1)
+- [`telar plugins:uninstall PLUGIN...`](#telar-pluginsuninstall-plugin-2)
+- [`telar plugins update`](#telar-plugins-update)
 
 ## `telar help [COMMAND]`
 
@@ -115,7 +119,7 @@ ALIASES
   $ telar plugins add
 
 EXAMPLES
-  $ telar plugins:install myplugin 
+  $ telar plugins:install myplugin
 
   $ telar plugins:install https://github.com/someuser/someplugin
 
@@ -175,7 +179,7 @@ ALIASES
   $ telar plugins add
 
 EXAMPLES
-  $ telar plugins:install myplugin 
+  $ telar plugins:install myplugin
 
   $ telar plugins:install https://github.com/someuser/someplugin
 
@@ -293,4 +297,5 @@ FLAGS
 DESCRIPTION
   Update installed plugins.
 ```
+
 <!-- commandsstop -->
