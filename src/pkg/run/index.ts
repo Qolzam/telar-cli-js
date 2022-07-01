@@ -26,6 +26,7 @@ export const run = async (dir: string, port: number) => {
   await fs.writeFile(tmpDir + '/package.json', packageJsonFile)
   shell.cd(tmpDir)
   shell.exec('npm i', {silent: true}, async () => {
-    await fastifyStart(['-p', port, '-w', '-d', 'index.js'])
+    shell.cd(currentDirectory)
+    await fastifyStart(['-p', port, '-w', '-d', tmpDir + '/index.js'])
   })
 }
