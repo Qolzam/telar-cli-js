@@ -9,7 +9,6 @@ const {start: fastifyStart} = require('fastify-cli/start')
 export const run = async (dir: string, port: number) => {
   const currentDirectory = shell.pwd().stdout
   require('dotenv').config({path: `${currentDirectory}/config/env/.env`})
-  console.log(process.env.test)
   const handlerFileName = 'handler.js'
   const microsLs = shell.ls(dir)
   if (microsLs.code !== 0) {
