@@ -25,6 +25,9 @@ export const run = async (dir: string, port: number) => {
   let microRouters = '// [micro-routers] \n'
   for (const micro of micros) {
     microRouters += `
+    router.all('${micro.path}/*', (req, res) => {
+      require('${path.join(micro.dir, handlerFileName)}')(req, res)
+    })
     router.all('${micro.path}', (req, res) => {
        require('${path.join(micro.dir, handlerFileName)}')(req, res)
      })\n
@@ -35,17 +38,10 @@ export const run = async (dir: string, port: number) => {
   const jsfile = await fs.readFile(path.resolve(__dirname, path.join('server', 'index.js')), 'utf8')
   const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), 'telar-run-'))
   await fs.writeFile(path.join(tmpDir, 'index.js'), jsfile.replace('// [micro-routers]', microRouters))
-  const packageJsonFile = await fs.readFile(path.resolve(__dirname, path.join('server', 'package.json')), 'utf8')
-  await fs.writeFile(path.join(tmpDir, 'package.json'), packageJsonFile)
 
-  // Install server node modules
-  shell.cd(tmpDir)
-  shell.exec('npm i', {silent: true}, async () => {
-    // Must run fastify in current directory to watch the changes
-    shell.cd(currentDirectory)
-    await fastifyStart(['-p', port, '-w', '-d', path.join(tmpDir, 'index.js')])
-    console.log(`Server is running on port ${port}`)
-  })
+  // Must run fastify in current directory to watch the changes
+  shell.cd(currentDirectory)
+  await fastifyStart(['-p', port, '-w', '-d', '-d', '-P', '-l', 'debug', path.join(tmpDir, 'index.js')])
 }
 
 /**
