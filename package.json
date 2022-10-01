@@ -19,7 +19,7 @@
   "dependencies": {
     "@oclif/core": "^1",
     "@oclif/plugin-help": "^5",
-    "@oclif/plugin-plugins": "^2.0.1",
+    "@oclif/plugin-plugins": "^2.1.1",
     "chalk": "^5.0.1",
     "dotenv": "^16.0.1",
     "fastify-cli": "^4.2.0",
