@@ -37,7 +37,9 @@
     "kleur": "^4.1.5",
     "open": "^8.4.0",
     "shelljs": "^0.8.5",
-    "socket.io": "^4.5.2"
+    "socket.io": "^4.5.2",
+    "patch-package": "^6.5.0",
+    "postinstall-postinstall": "^2.1.0",
   },
   "devDependencies": {
     "@oclif/command": "^1.8.16",
@@ -59,8 +61,6 @@
     "globby": "^11",
     "mocha": "^9",
     "oclif": "^3",
-    "patch-package": "^6.5.0",
-    "postinstall-postinstall": "^2.1.0",
     "shx": "^0.3.3",
     "ts-node": "^10.2.1",
     "tslib": "^2.3.1",

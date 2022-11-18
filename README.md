@@ -404,9 +404,9 @@ USAGE
   $ telar run [-h] [-d <value>] [-p <value>]
 
 FLAGS
-  -d, --dir=<value>   [default: micros] The directory for micro-services
-  -h, --help          Show CLI help.
-  -p, --port=<value>  [default: 3000] The port that server listen to
+  -d, --dir=<value>...  [default: ] The directory for micro-services
+  -h, --help            Show CLI help.
+  -p, --port=<value>    [default: 3000] The port that server listen to
 
 DESCRIPTION
   run a server for Telar micro-services
