@@ -2970,10 +2970,10 @@ fastest-levenshtein@^1.0.7:
   resolved "https://registry.npmjs.org/fastest-levenshtein/-/fastest-levenshtein-1.0.12.tgz"
   integrity sha512-On2N+BpYJ15xIC974QNVuYGMOlEVt4s0EOI3wwMqOmK1fdDY+FN/zltPV8vosq4ad4c/gJ1KHScUn/6AWIgiow==
 
-fastify-cli@^4.2.0:
-  version "4.2.0"
-  resolved "https://registry.npmjs.org/fastify-cli/-/fastify-cli-4.2.0.tgz"
-  integrity sha512-LIk6TSueOuUABua9b1yvSi/N4zrbDUG1NEEozvm23Cz5NQ4jAkoXOSXl5pJ6cL1APQSjL73ObT/8RAvatud0cA==
+fastify-cli@^4.4.0:
+  version "4.4.0"
+  resolved "https://registry.yarnpkg.com/fastify-cli/-/fastify-cli-4.4.0.tgz#857592bfef65a65c7e964b4903cba83fad021524"
+  integrity sha512-+tYGwKqGSNKH55Q8iroDir0JBLQIwMqUe+Z3/pk4vp7bC340QS/zLI27Cdlb26hcNCuYvjH1keCW9fTVlmMh0Q==
   dependencies:
     chalk "^4.1.2"
     chokidar "^3.5.2"
@@ -5683,17 +5683,10 @@ semver@^6.0.0, semver@^6.1.0, semver@^6.3.0:
   resolved "https://registry.npmjs.org/semver/-/semver-6.3.0.tgz"
   integrity sha512-b39TBaTSfV6yBrapU89p5fKekE2m/NwnDocOVruQFS1/veMgdzuPcnOM34M6CwxW8jH/lxEa5rBoDeUwu5HHTw==
 
-semver@^7.1.1, semver@^7.3.7:
+semver@^7.1.1, semver@^7.1.3, semver@^7.2.1, semver@^7.3.2, semver@^7.3.4, semver@^7.3.5, semver@^7.3.7:
   version "7.3.7"
   resolved "https://registry.npmjs.org/semver/-/semver-7.3.7.tgz"
   integrity sha512-QlYTucUYOews+WeEujDoEGziz4K6c47V/Bd+LjSSYcA94p+DmINdf7ncaUinThfvZyu13lN9OY1XDxt8C0Tw0g==
-  dependencies:
-    lru-cache "^6.0.0"
-
-semver@^7.1.3, semver@^7.2.1, semver@^7.3.2, semver@^7.3.4, semver@^7.3.5:
-  version "7.3.5"
-  resolved "https://registry.npmjs.org/semver/-/semver-7.3.5.tgz"
-  integrity sha512-PoeGJYh8HK4BTO/a9Tf6ZG3veo/A7ZVsYrSA6J8ny9nb3B1VrpkuN+z9OE5wfE5p6H4LchYZsegiQgbJD94ZFQ==
   dependencies:
     lru-cache "^6.0.0"
 
