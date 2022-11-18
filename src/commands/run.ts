@@ -11,8 +11,9 @@ export default class Sync extends Command {
     help: Flags.help({char: 'h'}),
     // Micro-services directory
     dir: Flags.string({
+      multiple: true,
       char: 'd',
-      default: 'micros',
+      default: [],
       description: 'The directory for micro-services',
     }),
     port: Flags.integer({
@@ -27,7 +28,9 @@ export default class Sync extends Command {
 
     this.log(`Prepare server to run micro-services in ${flags.dir}`)
     try {
-      await run(flags.dir, flags.port)
+      const microsPath = [...flags.dir]
+      microsPath.unshift('./micros')
+      await run(microsPath, flags.port)
     } catch (error: any) {
       this.error(error.message)
     }

@@ -3,10 +3,10 @@
 // This software is released under the MIT License.
 // https://opensource.org/licenses/MIT
 
-const Crypt = require('hybrid-crypto-js').Crypt
-const path = require('path')
-const fs = require('fs')
+import * as path from 'node:path'
+import * as fs from 'fs-extra'
 
+const Crypt =  require('hybrid-crypto-js').Crypt
 /**
  * Initialize hybrid crypto
  * @returns {*} crypt object

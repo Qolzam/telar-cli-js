@@ -14,13 +14,15 @@ const providerName = 'telar'
  */
 const loadEnvironmentFiles = (pathList: string[]) => {
   let environment = {}
-  pathList.forEach(item => {
+  for (const item of pathList) {
     const envObj = loadYaml(item) as {environment: any}
     if (!envObj.environment) {
       throw new Error(`Can not find [environment] field in [${item}].`)
     }
+
     environment = {...environment, ...envObj.environment}
-  })
+  }
+
   return environment
 }
 
@@ -31,13 +33,15 @@ const loadEnvironmentFiles = (pathList: string[]) => {
  */
 const loadSecretFiles = (pathList: string[]) => {
   let secret = {}
-  pathList.forEach(item => {
+  for (const item of pathList) {
     const envObj = loadYaml(item) as {secret: any}
     if (!envObj.secret) {
       throw new Error(`Can not find [secret] field in [${item}].`)
     }
+
     secret = {...secret, ...envObj.secret}
-  })
+  }
+
   return secret
 }
 
@@ -63,22 +67,25 @@ export const loadStack = (stackPath: string) => {
   }
   const fnNames = Object.keys(functions)
 
-  fnNames.forEach(fnName => {
+  for (const fnName of fnNames) {
     const fn = functions[fnName]
     let environment = {}
     syncStack.functions[fnName] = {environment: {}, secret: {}, bootstrap: fn.bootstrap}
     if (fn.environment_file && fn.environment_file.length > 0) {
       environment = loadEnvironmentFiles(fn.environment_file)
     }
+
     if (fn.environment) {
       environment = {...environment, ...fn.environment}
     }
+
     syncStack.functions[fnName].environment = environment
 
     if (fn.secret_file) {
       syncStack.functions[fnName].secret = loadSecretFiles(fn.secret_file)
     }
-  })
+  }
+
   return syncStack
 }
 

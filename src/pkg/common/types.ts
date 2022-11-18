@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 // Copyright (c) 2020 Amirhossein Movahedi (@qolzam)
 //
 // This software is released under the MIT License.
@@ -28,4 +29,30 @@ export interface SyncStackFunction {
   bootstrap: string;
   environment: Record<string, string>;
   secret: Record<string, string>;
+}
+
+export type ServiceStatus = 'inactive' | 'active' | 'activating' | 'failed'
+export type ServiceMeta = Array<  {
+  type: 'link' | 'text',
+  label: string,
+  value: string,
+}>
+
+export type Log = 'info'| 'warn'| 'error'
+export type Logger = (type: Log, title: string, message:string) => void
+export type SolutionPaths = {
+  projectPath: string,
+  templatesPath: string,
+  solutionPath: string,
+  solutionSetupJsPath: string,
+  solutionRunJsPath: string,
+  dotTelarDirectoryPath: string,
+  telarManifestPath: string
+ }
+export type TelarEnvironment = 'development' | 'production'
+
+export type MicroRun = {
+  dir: string;
+  name: string;
+  path: string;
 }

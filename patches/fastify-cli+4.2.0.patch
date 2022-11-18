@@ -1,0 +1,53 @@
+diff --git a/node_modules/fastify-cli/args.js b/node_modules/fastify-cli/args.js
+index 7c8a0a4..57ea13e 100644
+--- a/node_modules/fastify-cli/args.js
++++ b/node_modules/fastify-cli/args.js
+@@ -12,7 +12,7 @@ module.exports = function parseArgs (args) {
+       'populate--': true
+     },
+     number: ['port', 'inspect-port', 'body-limit', 'plugin-timeout'],
+-    string: ['log-level', 'address', 'socket', 'prefix', 'ignore-watch', 'logging-module', 'debug-host', 'lang', 'require'],
++    string: ['log-level', 'address', 'socket', 'prefix', 'ignore-watch', 'logging-module', 'debug-host', 'lang', 'require', 'watch-dir'],
+     boolean: ['pretty-logs', 'options', 'watch', 'verbose-watch', 'debug', 'standardlint'],
+     envPrefix: 'FASTIFY_',
+     alias: {
+@@ -75,6 +75,7 @@ module.exports = function parseArgs (args) {
+     require: parsedArgs.require,
+     prefix: parsedArgs.prefix,
+     loggingModule: parsedArgs.loggingModule,
+-    lang: parsedArgs.lang
++    lang: parsedArgs.lang,
++    watchDir: parsedArgs.watchDir
+   }
+ }
+diff --git a/node_modules/fastify-cli/lib/watch/index.js b/node_modules/fastify-cli/lib/watch/index.js
+index 237d6f5..3e93906 100644
+--- a/node_modules/fastify-cli/lib/watch/index.js
++++ b/node_modules/fastify-cli/lib/watch/index.js
+@@ -5,7 +5,7 @@ const cp = require('child_process')
+ const chalk = require('chalk')
+ const { arrayToRegExp, logWatchVerbose } = require('./utils')
+ const { GRACEFUL_SHUT } = require('./constants.js')
+-
++const parseArgs = require('../../args')
+ const EventEmitter = require('events')
+ const chokidar = require('chokidar')
+ const forkPath = path.join(__dirname, './fork.js')
+@@ -83,6 +83,17 @@ const watch = function (args, ignoreWatch, verboseWatch) {
+   const ignoredPattern = arrayToRegExp(ignoredArr)
+ 
+   const watcher = chokidar.watch(process.cwd(), { ignored: ignoredPattern })
++  const opts = parseArgs(args)
++  
++  if(Array.isArray(opts.watchDir)) {
++    for (let index = 0; index < opts.watchDir.length; index++) {
++      if (index !== 0) {
++        const dir = opts.watchDir[index];
++        watcher.add(dir)
++      }
++    }
++  }
++
+   watcher.on('ready', function () {
+     watcher.on('all', function (event, filepath) {
+       if (verboseWatch) {

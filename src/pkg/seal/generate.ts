@@ -3,9 +3,8 @@
 // This software is released under the MIT License.
 // https://opensource.org/licenses/MIT
 
-import * as fs from 'fs'
-const RSA = require('hybrid-crypto-js').RSA
-
+import * as fs from 'fs-extra'
+const RSA =  require('hybrid-crypto-js').RSA
 const rsa = new RSA({
   keySize: 4096,
 })

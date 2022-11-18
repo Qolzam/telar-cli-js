@@ -1,5 +1,5 @@
 import * as fs from 'fs-extra'
-import * as path from 'path'
+import * as path from 'node:path'
 import * as shell from 'shelljs'
 
 import {minify} from 'html-minifier-terser'
@@ -50,13 +50,12 @@ export const compileTemplate = async (targetPath: string) => {
     const htmlFiles = { \n
   `)
 
-  for (let index = 0; index < htmlFiles.length; index++) {
-    const file = htmlFiles[index]
-
+  for (const file of htmlFiles) {
     $readFiles.push(fs.readFile(file, 'utf8').then(fileContent => {
       writeJSTemplate(path.parse(file).name, fileContent, writableStream)
     }))
   }
+
   await Promise.all($readFiles)
   const compileFunc = `\n
 
