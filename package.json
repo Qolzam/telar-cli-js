@@ -23,7 +23,7 @@
     "@oclif/plugin-plugins": "^2.0.1",
     "chalk": "4.1.0",
     "dayjs": "^1.11.5",
-    "dotenv": "^16.0.1",
+    "dotenv": "^16.0.3",
     "express": "^4.18.1",
     "fastify-cli": "^4.2.0",
     "fs-extra": "^10.1.0",
