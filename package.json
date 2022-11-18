@@ -40,7 +40,7 @@
     "socket.io": "^4.5.2"
   },
   "devDependencies": {
-    "@oclif/command": "^1.8.16",
+    "@oclif/command": "^1.8.20",
     "@oclif/test": "^2",
     "@types/chai": "^4",
     "@types/express": "^4.17.14",
