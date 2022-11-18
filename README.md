@@ -22,7 +22,7 @@ $ npm install -g telar-cli
 $ telar COMMAND
 running command...
 $ telar (--version)
-telar-cli/0.13.0 darwin-arm64 node-v16.17.0
+telar-cli/0.14.0 darwin-arm64 node-v16.17.0
 $ telar --help [COMMAND]
 USAGE
   $ telar COMMAND
@@ -79,7 +79,7 @@ EXAMPLES
   $ telar create telar-social --template="telar-social-raw" --output ./path/to/output
 ```
 
-_See code: [dist/commands/create.ts](https://github.com/Qolzam/telar-cli-js/blob/v0.13.0/dist/commands/create.ts)_
+_See code: [dist/commands/create.ts](https://github.com/Qolzam/telar-cli-js/blob/v0.14.0/dist/commands/create.ts)_
 
 ## `telar help [COMMAND]`
 
@@ -119,7 +119,7 @@ EXAMPLES
   $ telar html compile ./auth
 ```
 
-_See code: [dist/commands/html.ts](https://github.com/Qolzam/telar-cli-js/blob/v0.13.0/dist/commands/html.ts)_
+_See code: [dist/commands/html.ts](https://github.com/Qolzam/telar-cli-js/blob/v0.14.0/dist/commands/html.ts)_
 
 ## `telar platform [ARG1] [ARG2]`
 
@@ -141,7 +141,7 @@ EXAMPLES
   $ telar platform pull https://github.com/Qolzam/platforms.git
 ```
 
-_See code: [dist/commands/platform.ts](https://github.com/Qolzam/telar-cli-js/blob/v0.13.0/dist/commands/platform.ts)_
+_See code: [dist/commands/platform.ts](https://github.com/Qolzam/telar-cli-js/blob/v0.14.0/dist/commands/platform.ts)_
 
 ## `telar plugins`
 
@@ -393,7 +393,7 @@ EXAMPLES
   $ telar proxy -p 80 -t http://social.example.com:4000
 ```
 
-_See code: [dist/commands/proxy.ts](https://github.com/Qolzam/telar-cli-js/blob/v0.13.0/dist/commands/proxy.ts)_
+_See code: [dist/commands/proxy.ts](https://github.com/Qolzam/telar-cli-js/blob/v0.14.0/dist/commands/proxy.ts)_
 
 ## `telar run`
 
@@ -415,7 +415,7 @@ EXAMPLES
   $ telar run
 ```
 
-_See code: [dist/commands/run.ts](https://github.com/Qolzam/telar-cli-js/blob/v0.13.0/dist/commands/run.ts)_
+_See code: [dist/commands/run.ts](https://github.com/Qolzam/telar-cli-js/blob/v0.14.0/dist/commands/run.ts)_
 
 ## `telar seal [FILE]`
 
@@ -444,7 +444,7 @@ EXAMPLES
     telar seal --gen secret --pk-base64
 ```
 
-_See code: [dist/commands/seal.ts](https://github.com/Qolzam/telar-cli-js/blob/v0.13.0/dist/commands/seal.ts)_
+_See code: [dist/commands/seal.ts](https://github.com/Qolzam/telar-cli-js/blob/v0.14.0/dist/commands/seal.ts)_
 
 ## `telar sync [TARGET]`
 
@@ -465,5 +465,5 @@ EXAMPLES
   $ telar sync vercel
 ```
 
-_See code: [dist/commands/sync.ts](https://github.com/Qolzam/telar-cli-js/blob/v0.13.0/dist/commands/sync.ts)_
+_See code: [dist/commands/sync.ts](https://github.com/Qolzam/telar-cli-js/blob/v0.14.0/dist/commands/sync.ts)_
 <!-- commandsstop -->
