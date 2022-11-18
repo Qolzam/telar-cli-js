@@ -39,7 +39,7 @@
     "shelljs": "^0.8.5",
     "socket.io": "^4.5.2",
     "patch-package": "^6.5.0",
-    "postinstall-postinstall": "^2.1.0",
+    "postinstall-postinstall": "^2.1.0"
   },
   "devDependencies": {
     "@oclif/command": "^1.8.16",
