@@ -52,7 +52,7 @@
     "@types/inquirer": "^8.0.0",
     "@types/js-yaml": "^4.0.5",
     "@types/mocha": "^9.0.0",
-    "@types/node": "^16.9.4",
+    "@types/node": "^16.18.4",
     "@types/shelljs": "^0.8.11",
     "chai": "^4",
     "eslint": "^7.32.0",
