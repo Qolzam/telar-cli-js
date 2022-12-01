@@ -31,7 +31,7 @@
     "html-minifier-terser": "^7.0.0-alpha.2",
     "http-proxy": "^1.18.1",
     "hybrid-crypto-js": "^0.2.4",
-    "inquirer": "^8.0.0",
+    "inquirer": "^8.2.5",
     "is-port-reachable": "^4.0.0",
     "js-yaml": "^4.1.0",
     "kleur": "^4.1.5",
