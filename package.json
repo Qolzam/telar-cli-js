@@ -37,7 +37,7 @@
     "kleur": "^4.1.5",
     "open": "^8.4.0",
     "shelljs": "^0.8.5",
-    "socket.io": "^4.5.2",
+    "socket.io": "^4.5.4",
     "patch-package": "^6.5.0",
     "postinstall-postinstall": "^2.1.0"
   },
