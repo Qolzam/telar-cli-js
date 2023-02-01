@@ -20,7 +20,7 @@
   "dependencies": {
     "@oclif/core": "^1",
     "@oclif/plugin-help": "^5",
-    "@oclif/plugin-plugins": "^2.0.1",
+    "@oclif/plugin-plugins": "^2.3.0",
     "chalk": "4.1.0",
     "dayjs": "^1.11.5",
     "dotenv": "^16.0.1",
