@@ -42,7 +42,7 @@
     "postinstall-postinstall": "^2.1.0"
   },
   "devDependencies": {
-    "@oclif/command": "^1.8.16",
+    "@oclif/command": "^1.8.22",
     "@oclif/test": "^2",
     "@types/chai": "^4",
     "@types/express": "^4.17.14",
