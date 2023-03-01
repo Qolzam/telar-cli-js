@@ -35,7 +35,7 @@
     "is-port-reachable": "^4.0.0",
     "js-yaml": "^4.1.0",
     "kleur": "^4.1.5",
-    "open": "^8.4.0",
+    "open": "^8.4.2",
     "shelljs": "^0.8.5",
     "socket.io": "^4.5.2",
     "patch-package": "^6.5.0",
