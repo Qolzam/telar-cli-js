@@ -1,10 +1,10 @@
-# telar-cli-js
+# Telar CLI
 
 This is a CLI to scaffold, build and deploy.
 
 [![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
-[![Version](https://img.shields.io/npm/v/telar-cli-js.svg)](https://npmjs.org/package/telar-cli-js)
-[![Downloads/week](https://img.shields.io/npm/dw/telar-cli-js.svg)](https://npmjs.org/package/telar-cli-js)
+[![Version](https://img.shields.io/npm/v/telar-cli.svg)](https://npmjs.org/package/telar-cli)
+[![Downloads/week](https://img.shields.io/npm/dw/telar-cli.svg)](https://npmjs.org/package/telar-cli)
 
 <!-- toc -->
 
