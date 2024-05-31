@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import * as fs from 'fs-extra'
 import * as path from 'node:path'
-import jsonFile from 'jsonfile'
 
+import {readJsonFile} from '../jsonfile.js'
 import shell from '../shell/index.js'
 
 export const sync = async (target: string, stackPath: string) => {
@@ -30,6 +31,6 @@ export const sync = async (target: string, stackPath: string) => {
     throw new Error(`The resolve path for platform '${target}' does not exist in ${resolvePath}!`)
   }
 
-  const targetPlatform = await jsonFile.readFile(resolvePath, {encoding: 'utf8'})
+  const targetPlatform = (await readJsonFile(resolvePath, {encoding: 'utf8'})) as any
   targetPlatform.sync(stackPath)
 }

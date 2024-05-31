@@ -2,10 +2,10 @@ import * as fs from 'fs-extra'
 import {ForkOptions, exec, fork} from 'node:child_process'
 import {readFile, writeFile} from 'node:fs/promises'
 import * as path from 'node:path'
-import jsonFile from 'jsonfile'
 
 import {asyncSend, gitClone, logger} from '../../helpers.js'
 import evt from '../common/events.js'
+import {readJsonFile} from '../jsonfile.js'
 import {ServiceCache} from './service.cache.js'
 import {ServiceTemplate} from './service.types.js'
 import {getVmScript} from './vm.service.call.js'
@@ -107,15 +107,6 @@ export const ServiceProcess = {
     })
   },
 
-   verifyAndFixURL(url:string) {
-    // Check if the URL starts with a valid scheme or is a relative path
-    if (!/^file:|^\/|^\.\./.test(url)) {
-      // Invalid URL format, prepend with 'file://' scheme
-      url = 'file://' + url;
-    }
-    return url;
-  },
-  
   callServiceByFork(serviceName: string, projectPath: string, runPath: string, cwd?: string): Promise<void> {
     return new Promise((resolve, reject) => {
       const options: ForkOptions = {cwd, silent: true}
@@ -202,7 +193,7 @@ export const ServiceProcess = {
       )
     }
 
-    return jsonFile.readFile(serviceTemplatePath, {encoding: 'utf8'})
+    return readJsonFile(serviceTemplatePath, {encoding: 'utf8'}) as Promise<ServiceTemplate>
   },
 
   handleServiceMessage(action: Record<string, unknown>, serviceName: string): void {
@@ -241,5 +232,15 @@ export const ServiceProcess = {
 
       await Promise.all(stopServicesPromise)
     }
+  },
+
+  verifyAndFixURL(url: string) {
+    // Check if the URL starts with a valid scheme or is a relative path
+    if (!/^file:|^\/|^\.\./.test(url)) {
+      // Invalid URL format, prepend with 'file://' scheme
+      url = 'file://' + url
+    }
+
+    return url
   },
 }

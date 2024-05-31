@@ -2,9 +2,9 @@ import {Command, Flags} from '@oclif/core'
 import * as fs from 'fs-extra'
 import * as path from 'node:path'
 import pAll from 'p-all'
-import jsonFile from 'jsonfile'
 
 import {getServicePath} from '../helpers.js'
+import {readJsonFile} from '../pkg/jsonfile.js'
 import {ServiceProcess} from '../pkg/service/service.process.js'
 const defaultTelarEnv = 'development'
 
@@ -25,7 +25,9 @@ export default class Solution extends Command {
       throw new Error(`Could not find telar manifest in ${manifestPath} `)
     }
 
-    const telarManifest: Record<string, unknown> = await jsonFile.readFile(path.resolve(root, '.telar', 'manifest.json'), {encoding:'utf8'})
+    const telarManifest: Record<string, unknown> = await readJsonFile(path.resolve(root, '.telar', 'manifest.json'), {
+      encoding: 'utf8',
+    })
     return telarManifest
   }
 

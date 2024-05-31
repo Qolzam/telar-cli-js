@@ -1,17 +1,21 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {Args, Command, Flags} from '@oclif/core'
 import * as fs from 'fs-extra'
-import {got} from 'got'
 import {mkdtemp, writeFile} from 'node:fs/promises'
 import * as os from 'node:os'
 import * as path from 'node:path'
 import pAll from 'p-all'
-import jsonFile from 'jsonfile'
 
-import {getServicePath, gitClone} from '../helpers.js'
+import {getServicePath, gitClone, logger} from '../helpers.js'
 import SolutionService from '../pkg/common/solution.js'
+import {readJsonFile} from '../pkg/jsonfile.js'
 import {ServiceProcess} from '../pkg/service/service.process.js'
 
 const defaultTemplateRepository = 'https://github.com/telarpress/solutions.git'
+const solutionRepositoryName = 'solutions'
+const solutionJsonFileName = 'solution.json'
+const defaultStoreRepository = 'https://github.com/telarpress/store.git'
+
 export default class Create extends Command {
   static args = {
     solution: Args.string({
@@ -26,8 +30,11 @@ export default class Create extends Command {
   static examples = ['$ telar create telar-social']
 
   static flags = {
-    dir: Flags.string({char: 'd', required: false}),
-    file: Flags.string({char: 'f', default: 'solution.json'}),
+    dir: Flags.string({char: 'd', description: 'Aternative direcoty to telar solutions repository', required: false}),
+    file: Flags.string({
+      char: 'f',
+      description: 'Alternative to default telar store repository. The path example `path/to/solution.json`',
+    }),
     git: Flags.string({char: 'g', required: false}),
     // Help
     help: Flags.help({char: 'h'}),
@@ -39,81 +46,123 @@ export default class Create extends Command {
   // properties
   solutionStatus = 'inactive'
 
-  async closeServices(): Promise<void> {
-    process.on('SIGTERM', async () => {
-      if (this.solutionService) {
-        await this.solutionService.stopServices()
+  async cloneStore(targetRepo: string, copyCreateDir: string) {
+    try {
+      await gitClone(targetRepo, copyCreateDir)
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        this.error(`Could not clone ${targetRepo}. ${error.message}`)
       }
-    })
-
-    // Wait for setup to finish
-    const stdin = process.openStdin()
-    stdin.on('keypress', async (chunk, key) => {
-      if (key && key.ctrl && key.name === 'c') {
-        // stop services
-        if (this.solutionService) {
-          await this.solutionService.stopServices()
-        }
-
-        // TODO: Check the services are down the exit
-        this.exit(0)
-      }
-    })
-    await new Promise(() => {
-      console.log('-----------------------------------------------')
-      console.log('Services are running. Press ctrl+c to exit!')
-      console.log('----------------------------------------------- \n\n')
-    })
-
-    const storeMicrosResponse = await got.get('https://raw.githubusercontent.com/telarpress/store/main/solutions.json')
-    if (storeMicrosResponse.statusCode !== 200) {
-      this.error('Could not retrieve the templates!')
     }
   }
 
+  async cloneTemplates(targetRepo: string, copyCreateDir: string) {
+    try {
+      await gitClone(targetRepo, copyCreateDir)
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        this.error(`Could not clone ${targetRepo}. ${error.message}`)
+      }
+    }
+  }
+
+  /**
+   * Get solution file path
+   * @param copyCreateDir target directory to copy all solutions
+   * @param solutionName solution name to get from store
+   * @param file custom file path selected
+   * @returns {string} solution file path
+   */
+  async getSolutionFilePath(copyCreateDir: string, solutionName: string, file?: string) {
+    let solutionFilePath = null
+    if (file) {
+      solutionFilePath = path.resolve(file)
+    } else {
+      if (!solutionName) {
+        this.error('Solution name is required. Example: `$ telar create telar-social` ')
+      }
+
+      await this.cloneStore(defaultStoreRepository, copyCreateDir)
+      solutionFilePath = path.join(copyCreateDir, solutionRepositoryName, solutionName, solutionJsonFileName)
+    }
+
+    if (!solutionFilePath) {
+      this.error(`The solution file path could not be recognized. The path [${solutionFilePath}]`)
+    }
+
+    // whether solution file exist in the given path
+    if (!(await fs.pathExists(solutionFilePath))) {
+      this.error(
+        `Solution "${solutionName}" does not exist. Make sure the solution name is correct or exist in the sore. The path [${solutionFilePath}] file does not exist!`,
+      )
+    }
+
+    return solutionFilePath
+  }
+
   async run() {
+    try {
+      await this.setupRun()
+    } catch (error) {
+      if (error instanceof Error) {
+        this.log(`An unexpected error happened.`)
+        this.error(error)
+      } else {
+        console.error(error)
+      }
+    }
+  }
+
+  async setupRun() {
     const {args, flags} = await this.parse(Create)
     const targetRepo: string = flags.git || defaultTemplateRepository
     const solutionName = args.solution
     const projectPath = path.resolve(path.join(flags.output, solutionName))
-    await fs.mkdirp(projectPath)
-    const solutionFilePath = path.resolve(flags.file)
-    // const solutionPath = path.parse(solutionFilePath).dir
-    this.log(`The project path created [${projectPath}]` )
 
-    // whether solution file exist in the given path
-    if (!(await fs.pathExists(solutionFilePath))) {
-      this.error(`Solution [${solutionFilePath}] file does not exist!`)
-    }
+    // create a temporary directory
+    const copyCreateDir = await mkdtemp(path.join(os.tmpdir(), 'telar-create-' + solutionName))
+
+    logger('info', 'create', `Fetching solution file.`)
+    const solutionFilePath = await this.getSolutionFilePath(copyCreateDir, solutionName, flags.file)
+    logger('info', 'create', `Solution file is fetched.`)
+
+    // create the project directory
+    await fs.mkdirp(projectPath)
+    // const solutionPath = path.parse(solutionFilePath).dir
+    logger('info', 'create', `The project path created [${projectPath}]`)
 
     // import solution file
-    const solutionConfig = await jsonFile.readFile(solutionFilePath, {encoding: 'utf8'})
-    const servicesName = Object.keys(solutionConfig.services).filter(
-      (serviceName) => !solutionConfig.services[serviceName].exclude,
+    let solutionConfig = {} as {[key: string]: any}
+    let servicesName: Array<string> = []
+    try {
+      solutionConfig = await readJsonFile(solutionFilePath, {encoding: 'utf8'})
+      servicesName = Object.keys(solutionConfig.services).filter(
+        (serviceName) => !solutionConfig.services[serviceName].exclude,
       )
-    this.log(`The solution file imported [${solutionFilePath}]` )
+    } catch (error) {
+      if (error instanceof Error) {
+        this.log(`Error while reading solution file from ${solutionFilePath}`)
+        this.error(error)
+      } else {
+        console.error(error)
+        this.exit(1)
+      }
+    }
+
+    logger('info', 'create', `The solution file imported [${solutionFilePath}]`)
 
     // copy services to a temporary directory
-    const copyCreateDir = await mkdtemp(path.join(os.tmpdir(), 'telar-creates-' + solutionName))
-    this.log('copyCreateDir', copyCreateDir)
     if (flags.dir) {
-      console.log('dir: ',flags.dir)
       if (await fs.pathExists(flags.dir)) {
         await fs.copy(flags.dir, copyCreateDir)
       } else {
         this.error(`Directory [${flags.dir}] does not exist! Make sure the path is correct.`)
       }
     } else {
-      try {
-        await gitClone(targetRepo, copyCreateDir)
-      } catch (error: unknown) {
-        if (error instanceof Error) {
-          this.error(`Could not clone ${targetRepo}. ${error.message}`)
-        }
-      }
+      await this.cloneTemplates(targetRepo, copyCreateDir)
     }
 
-    this.log(`The services are copied to temporary directory [${copyCreateDir}]` )
+    logger('info', 'create', `The services are copied to temporary directory [${copyCreateDir}]`)
 
     // whether the required solution exsits in the project directory
     const servicePathExist$ = []
@@ -145,7 +194,8 @@ export default class Create extends Command {
         this.error(`Could not copy services to the project root directory [${projectPath}]. ${error.message}`)
       }
     }
-    this.log(`The services are built [${projectPath}]` )
+
+    logger('info', 'create', `The services are built [${projectPath}]`)
 
     // run setup command for all services
     const setupServices$ = []
@@ -161,6 +211,8 @@ export default class Create extends Command {
     const manifestContent = {development: {...solutionConfig, status: 'ready'}}
     await this.writeManifest(JSON.stringify(manifestContent, null, 2), projectPath)
 
+    // remove temp directory
+    await fs.remove(copyCreateDir)
     this.log('=======================')
     this.log(`🎉 Services setup is done! Use commands below to start services.
 

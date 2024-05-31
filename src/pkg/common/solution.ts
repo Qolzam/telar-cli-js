@@ -1,10 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import * as fs from 'fs-extra'
 import {ChildProcess, fork} from 'node:child_process'
 import {writeFile} from 'node:fs/promises'
 import * as path from 'node:path'
-import jsonFile from 'jsonfile'
 
 import {asyncSend, logger} from '../../helpers.js'
+import {readJsonFile} from '../jsonfile.js'
 import {ServiceCache} from '../service/service.cache.js'
 import {SET_SERVICES} from '../web-solutions/actions.js'
 import {uiemit} from '../web-solutions/server.js'
@@ -13,18 +14,18 @@ import {canUsePort} from './network.js'
 import {ServiceMeta, ServiceStatus, SolutionPaths, TelarEnvironment} from './types.js'
 
 export default class SolutionService {
-  dependsOnServices: {[key: string] : Array<string>} = {}
+  dependsOnServices: {[key: string]: Array<string>} = {}
 
   paths: SolutionPaths
   servicesMeta: {[key: string]: ServiceMeta} = {}
   servicesName: Array<string> = []
-  servicesRunProcess: {[key: string] : ChildProcess} = {}
+  servicesRunProcess: {[key: string]: ChildProcess} = {}
   servicesStatus: {[key: string]: ServiceStatus} = {}
   // fields
   solutionName = ''
-  solutionRun: ChildProcess| null = null
+  solutionRun: ChildProcess | null = null
   solutionStatus = 'inactive'
-  subSolutions: {[key:string]: any} = {}
+  subSolutions: {[key: string]: any} = {}
   telarEnv: TelarEnvironment
   constructor(solutionName: string) {
     this.solutionName = solutionName
@@ -35,16 +36,19 @@ export default class SolutionService {
   checkDependsOnServiceToRun(): void {
     for (const serviceName of Object.keys(this.dependsOnServices)) {
       const dependsOn = this.dependsOnServices[serviceName]
-      if (!['activating', 'active'].includes(this.servicesStatus[serviceName])  && dependsOn.every((name: string) => this.servicesStatus[name] === 'active')) {
+      if (
+        !['activating', 'active'].includes(this.servicesStatus[serviceName]) &&
+        dependsOn.every((name: string) => this.servicesStatus[name] === 'active')
+      ) {
         // TODO: code commented
         // this.runService(serviceName)
       }
     }
   }
 
-  async checkSubsolutionPorts(): Promise<{ [x: string]: boolean; }> {
+  async checkSubsolutionPorts(): Promise<{[x: string]: boolean}> {
     const portPromises = []
-    const indexKey: {[key:number]: string} = {}
+    const indexKey: {[key: number]: string} = {}
     for (const [index, key] of Object.keys(this.subSolutions).entries()) {
       const solution = this.subSolutions[key]
       indexKey[index] = key
@@ -64,7 +68,7 @@ export default class SolutionService {
     return mappedPortsStatus
   }
 
-  getSolutionPaths(solutionName: string) : SolutionPaths {
+  getSolutionPaths(solutionName: string): SolutionPaths {
     const projectPath = '/Users/qolzam/projects/telar/solutions'
     const templatesPath = path.join(projectPath, 'templates')
     const solutionPath = path.join(templatesPath, solutionName)
@@ -84,14 +88,20 @@ export default class SolutionService {
   }
 
   // methods
-  async loadEnvManifest(): Promise<{services: {
-    [key: string]: any;
-    }, subSolutions: {
-      [key: string]: any;
-      }}> {
-    const telarManifest = await jsonFile.readFile(this.paths.telarManifestPath, {encoding: 'utf8'})
+  async loadEnvManifest(): Promise<{
+    services: {
+      [key: string]: any
+    }
+    subSolutions: {
+      [key: string]: any
+    }
+  }> {
+    const telarManifest = (await readJsonFile(this.paths.telarManifestPath, {encoding: 'utf8'})) as any
     const currentEnvManifest = this.telarEnv === 'production' ? telarManifest.production : telarManifest.development
-    this.subSolutions = currentEnvManifest.solutions && Object.keys(currentEnvManifest.solutions).length > 0 ? currentEnvManifest.solutions : null
+    this.subSolutions =
+      currentEnvManifest.solutions && Object.keys(currentEnvManifest.solutions).length > 0
+        ? currentEnvManifest.solutions
+        : null
     if (currentEnvManifest.services && Object.keys(currentEnvManifest.services).length > 0) {
       for (const name of Object.keys(currentEnvManifest.services)) {
         ServiceCache.setService(name, currentEnvManifest.services[name])
@@ -101,7 +111,7 @@ export default class SolutionService {
     return {services: currentEnvManifest.services, subSolutions: this.subSolutions}
   }
 
-  onAllServicesActivated():void {
+  onAllServicesActivated(): void {
     logger('info', 'CLI', 'all services are activated.')
     if (!this.solutionRun) {
       logger('error', 'CLI', 'solution run child process is null!')
@@ -112,10 +122,10 @@ export default class SolutionService {
   }
 
   // handle service status
-  onServiceStatus(name: string, status: ServiceStatus) :void {
+  onServiceStatus(name: string, status: ServiceStatus): void {
     this.servicesStatus[name] = status
 
-    if (this.servicesName.every(serviceName => this.servicesStatus[serviceName] === 'active')) {
+    if (this.servicesName.every((serviceName) => this.servicesStatus[serviceName] === 'active')) {
       this.onAllServicesActivated()
     }
 
@@ -134,19 +144,22 @@ export default class SolutionService {
     }
   }
 
-  async runServices(): Promise<{ services: { [key: string]: any; }; subSolutions: { [key: string]: any; }; }> {
-    const {services, subSolutions} = await  this.loadEnvManifest()
+  async runServices(): Promise<{services: {[key: string]: any}; subSolutions: {[key: string]: any}}> {
+    const {services, subSolutions} = await this.loadEnvManifest()
     const portsStatus = await this.checkSubsolutionPorts()
     console.log('portsStatus', JSON.stringify(portsStatus, null, 2))
     if (Object.values(portsStatus).includes(true)) {
-      throw new Error('All ports must be available for app. Please check in-used ports and make it available for app.' + JSON.stringify(portsStatus, null, 2))
+      throw new Error(
+        'All ports must be available for app. Please check in-used ports and make it available for app.' +
+          JSON.stringify(portsStatus, null, 2),
+      )
     } else {
       return {services: {}, subSolutions: {}}
     }
 
     // run services if any
     if (services) {
-      this.servicesName =  Object.keys(services)
+      this.servicesName = Object.keys(services)
       const servicesToRun: Array<string> = []
 
       // set default status and meta info and depends_on for services
@@ -175,7 +188,7 @@ export default class SolutionService {
     return {services, subSolutions}
   }
 
-  async runSolution() : Promise<void> {
+  async runSolution(): Promise<void> {
     this.solutionRun = fork(this.paths.solutionRunJsPath, {silent: true})
 
     if (this.solutionRun && this.solutionRun.stdout) {
@@ -184,12 +197,12 @@ export default class SolutionService {
       })
     }
 
-    this.solutionRun.on('error', (err:any) => {
+    this.solutionRun.on('error', (err: any) => {
       logger('error', this.solutionName, '\n\t\tERROR: spawn failed! (' + err + ')')
     })
 
     if (this.solutionRun.stderr) {
-      this.solutionRun.stderr.on('data',  (data: any) => {
+      this.solutionRun.stderr.on('data', (data: any) => {
         logger('info', '', String(data))
       })
     }
@@ -212,14 +225,14 @@ export default class SolutionService {
     const solutionSetup = fork(this.paths.solutionSetupJsPath)
     solutionSetup.on('message', (action: any) => {
       switch (action.type) {
-      case 'resolved': {
-        evt.send(`resolved-${action.__id}`)
-        break
-      }
+        case 'resolved': {
+          evt.send(`resolved-${action.__id}`)
+          break
+        }
 
-      default: {
-        break
-      }
+        default: {
+          break
+        }
       }
     })
 
@@ -236,7 +249,7 @@ export default class SolutionService {
     logger('info', 'CLI', 'Solution setup is done!')
   }
 
-  async stopServices() : Promise<void> {
+  async stopServices(): Promise<void> {
     const stopServicesPromise: Array<Promise<any>> = []
     for (const serviceName of this.servicesName) {
       if (this.servicesRunProcess[serviceName].channel) {
