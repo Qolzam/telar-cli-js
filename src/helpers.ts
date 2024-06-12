@@ -2,8 +2,9 @@ import dayjs from 'dayjs'
 import inquirer from 'inquirer'
 import kleur from 'kleur'
 import {createSpinner} from 'nanospinner'
-import {ChildProcess} from 'node:child_process'
+import {ChildProcess, exec} from 'node:child_process'
 import {randomUUID} from 'node:crypto'
+import fs from 'node:fs'
 import path from 'node:path'
 import tiged from 'tiged'
 
@@ -111,7 +112,49 @@ export const asyncSend = (worker: ChildProcess, data: Record<string, unknown>) =
     })
   })
 
-export const gitClone = async (targetRepo: string, dir: string) => {
+// a function to check if a directory does not exist create one
+export const checkDirCreate = async (dir: string) => {
+  try {
+    await fs.promises.access(dir)
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
+      await fs.promises.mkdir(dir, {recursive: true})
+    }
+  }
+}
+
+// a function run git clone command async using exec of child_process
+export const gitClone = async (targetRepo: string, dir: string) =>
+  new Promise((resolve, reject) => {
+    // check if git is installed
+    exec('git --version', (error) => {
+      if (error) {
+        // if git does not exist use git download function and warn to user
+        logger(
+          'warn',
+          'Git not found',
+          'Git is not installed. Using git download instead. In this case, the git history will not be cloned.',
+        )
+        gitDownload(targetRepo, dir).then((e) => {
+          resolve(e)
+        })
+      } else {
+        // check if the directory does not exist create one
+        checkDirCreate(dir).then(() => {
+          // run git clone command
+          exec(`git clone ${targetRepo} ${dir}`, {}, (error, stdout) => {
+            if (error) {
+              reject(error)
+            }
+
+            resolve(stdout)
+          })
+        })
+      }
+    })
+  })
+
+export const gitDownload = async (targetRepo: string, dir: string) => {
   const emitter: any = tiged(targetRepo, {
     disableCache: true,
     force: true,

@@ -6,15 +6,15 @@ import * as os from 'node:os'
 import * as path from 'node:path'
 import pAll from 'p-all'
 
-import {getServicePath, gitClone, logger} from '../helpers.js'
+import {getServicePath, gitDownload, logger} from '../helpers.js'
 import SolutionService from '../pkg/common/solution.js'
 import {readJsonFile} from '../pkg/jsonfile.js'
 import {ServiceProcess} from '../pkg/service/service.process.js'
 
 const defaultTemplateRepository = 'https://github.com/telarpress/solutions.git'
+const defaultStoreRepository = 'https://github.com/telarpress/store.git'
 const solutionRepositoryName = 'solutions'
 const solutionJsonFileName = 'solution.json'
-const defaultStoreRepository = 'https://github.com/telarpress/store.git'
 
 export default class Create extends Command {
   static args = {
@@ -48,7 +48,7 @@ export default class Create extends Command {
 
   async cloneStore(targetRepo: string, copyCreateDir: string) {
     try {
-      await gitClone(targetRepo, copyCreateDir)
+      await gitDownload(targetRepo, copyCreateDir)
     } catch (error: unknown) {
       if (error instanceof Error) {
         this.error(`Could not clone ${targetRepo}. ${error.message}`)
@@ -58,7 +58,7 @@ export default class Create extends Command {
 
   async cloneTemplates(targetRepo: string, copyCreateDir: string) {
     try {
-      await gitClone(targetRepo, copyCreateDir)
+      await gitDownload(targetRepo, copyCreateDir)
     } catch (error: unknown) {
       if (error instanceof Error) {
         this.error(`Could not clone ${targetRepo}. ${error.message}`)
@@ -208,7 +208,12 @@ export default class Create extends Command {
 
     await pAll(setupServices$, {concurrency: 1})
     // write manifest content
-    const manifestContent = {development: {...solutionConfig, status: 'ready'}}
+    const manifestContent = {
+      development: {...solutionConfig, status: 'ready'},
+      solutionName,
+      solutionPath: flags.dir || targetRepo,
+      solutionPathType: flags.dir ? 'local' : 'remote',
+    }
     await this.writeManifest(JSON.stringify(manifestContent, null, 2), projectPath)
 
     // remove temp directory

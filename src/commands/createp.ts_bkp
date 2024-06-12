@@ -59,7 +59,7 @@ export default class Create extends Command {
     return Promise.all(copyResult)
   }
 
-  async gitClone(targetRepo: string, dir: string): Promise<void> {
+  async gitDownload(targetRepo: string, dir: string): Promise<void> {
     this.log('Fetch creates from repository: ', targetRepo)
     const cloneCommand = `git clone --quiet ${defaultTemplateRepository} ${dir}`
     if (shell.exec(cloneCommand).code !== 0) {
@@ -189,7 +189,7 @@ export default class Create extends Command {
     // check whether the target repository is a local path or github repository URL
     if (isGitUrl(targetRepo)) {
       copyCreateDir = await fs.mkdtemp(path.join(os.tmpdir(), 'telar-creates-'))
-      await this.gitClone(targetRepo, copyCreateDir)
+      await this.gitDownload(targetRepo, copyCreateDir)
     } else if (await fs.pathExists(targetRepo)) {
       fs.copy(targetRepo, copyCreateDir)
     } else {

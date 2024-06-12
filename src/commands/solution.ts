@@ -1,14 +1,27 @@
-import {Command, Flags} from '@oclif/core'
+import {Args, Command, Flags} from '@oclif/core'
 import * as fs from 'fs-extra'
+import {mkdtemp} from 'node:fs/promises'
+import os from 'node:os'
 import * as path from 'node:path'
 import pAll from 'p-all'
 
-import {getServicePath} from '../helpers.js'
+import {getServicePath, gitDownload} from '../helpers.js'
 import {readJsonFile} from '../pkg/jsonfile.js'
 import {ServiceProcess} from '../pkg/service/service.process.js'
 const defaultTelarEnv = 'development'
 
+// Constants
+const defaultTemplateRepository = 'https://github.com/telarpress/solutions.git'
+
 export default class Solution extends Command {
+  // args = [{command: 'recreate'}, {service: 'service_name'}].
+  // recreate: remove the target service
+  // service: the service name to recreate
+  static args = {
+    command: Args.string({description: 'Command to run', required: false}),
+    service: Args.string({description: 'Service name', required: false}),
+  }
+
   static description = 'Manage solutions'
 
   static examples = ['$ telar solution']
@@ -31,6 +44,59 @@ export default class Solution extends Command {
     return telarManifest
   }
 
+  async recreateService(
+    manifest: Record<string, unknown>,
+    currentEnv: string,
+    projectPath: string,
+    serviceName?: string,
+  ) {
+    if (!serviceName) {
+      this.error('Service name is required')
+    }
+
+    const {solutionName, solutionPath, solutionPathType} = manifest as {
+      solutionName: string
+      solutionPath: string
+      solutionPathType: string
+    }
+
+    const {services} = manifest[currentEnv] as {
+      services: {[key: string]: {config: {[key: string]: string}; worker: boolean}}
+    }
+    const service = services[serviceName]
+    if (!service) {
+      this.error(`Service [${serviceName}] does not exist in the manifest`)
+    }
+
+    const servicePath = getServicePath(service.worker, projectPath, serviceName)
+    await fs.remove(servicePath)
+    this.log(`Service [${serviceName}] removed from [${projectPath}]`)
+
+    // download the solutions from `defaultTemplateRepository` in temporary directory
+    const copyCreateDir = await mkdtemp(path.join(os.tmpdir(), 'telar-recreate-' + serviceName))
+    await gitDownload(defaultTemplateRepository, copyCreateDir)
+
+    // copy service from temporary directory to the project directory
+    const serviceCopyToSolutionRoot$ = []
+    serviceCopyToSolutionRoot$.push(fs.copy(path.join(copyCreateDir, 'templates', serviceName), servicePath))
+
+    await Promise.all(serviceCopyToSolutionRoot$)
+    this.log(`Service [${serviceName}] copied to [${projectPath}]`)
+
+    // run setup command for all service
+    const setupServices$ = []
+    setupServices$.push(() => ServiceProcess.setupService(projectPath, servicePath, service.config))
+
+    await pAll(setupServices$, {concurrency: 1})
+    this.log(`Service [${serviceName}] setup is done!`)
+
+    // remove temp directory
+    await fs.remove(copyCreateDir)
+    this.log('-------------------------------------------')
+    this.log(`🎉 Service [${serviceName}] setup is done!`)
+    this.log('-------------------------------------------')
+  }
+
   async run() {
     const currentEnv = process.env.TELAR_ENV || defaultTelarEnv
     const projectPath = path.resolve('./')
@@ -45,6 +111,36 @@ export default class Solution extends Command {
       }
     }
 
+    // check args
+    // if the arge command is not provided or it equals to `run` , run the solution
+    // otherwise, run the command
+    const {args} = await this.parse(Solution)
+    if (!args.command || args.command === 'run') {
+      await this.runSolution(manifest, currentEnv, projectPath)
+    } else if (args.command === 'recreate') {
+      await this.recreateService(manifest, currentEnv, projectPath, args.service)
+    }
+
+    // Wait for setup to finish
+    const stdin = process.openStdin()
+    stdin.on('keypress', async (chunk, key) => {
+      if (key && key.ctrl && key.name === 'c') {
+        // stop services
+        await ServiceProcess.stopServices()
+        this.log('All services stopped by [keypress]')
+
+        // TODO: Check the services are down the exit
+        this.exit(0)
+      }
+    })
+    await new Promise(() => {
+      this.log('-------------------------------------------')
+      console.log('Press ctrl+c to exit!')
+      this.log('-------------------------------------------')
+    })
+  }
+
+  async runSolution(manifest: Record<string, unknown>, currentEnv: string, projectPath: string) {
     const {services} = manifest[currentEnv] as {
       services: {[key: string]: {config: {[key: string]: string}; worker: boolean}}
     }
@@ -86,23 +182,5 @@ export default class Solution extends Command {
         this.log(error.message)
       }
     }
-
-    // Wait for setup to finish
-    const stdin = process.openStdin()
-    stdin.on('keypress', async (chunk, key) => {
-      if (key && key.ctrl && key.name === 'c') {
-        // stop services
-        await ServiceProcess.stopServices()
-        this.log('All services stopped by [keypress]')
-
-        // TODO: Check the services are down the exit
-        this.exit(0)
-      }
-    })
-    await new Promise(() => {
-      this.log('-------------------------------------------')
-      console.log('Press ctrl+c to exit!')
-      this.log('-------------------------------------------')
-    })
   }
 }

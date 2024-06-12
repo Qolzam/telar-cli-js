@@ -7,53 +7,49 @@ This is a CLI to scaffold, build and deploy.
 [![Downloads/week](https://img.shields.io/npm/dw/telar-cli.svg)](https://npmjs.org/package/telar-cli)
 
 <!-- toc -->
-
-- [telar-cli-js](#telar-cli-js)
-- [Usage](#usage)
-- [Commands](#commands)
+* [Telar CLI](#telar-cli)
+* [Usage](#usage)
+* [Commands](#commands)
 <!-- tocstop -->
 
 # Usage
 
 <!-- usage -->
-
 ```sh-session
 $ npm install -g telar-cli
 $ telar COMMAND
 running command...
 $ telar (--version)
-telar-cli/0.20.20 darwin-arm64 node-v21.5.0
+telar-cli/0.20.21 darwin-arm64 node-v21.5.0
 $ telar --help [COMMAND]
 USAGE
   $ telar COMMAND
 ...
 ```
-
 <!-- usagestop -->
 
 # Commands
 
 <!-- commands -->
-
-- [`telar create SOLUTION`](#telar-create-solution)
-- [`telar help [COMMAND]`](#telar-help-command)
-- [`telar html [ARG0] [PATH]`](#telar-html-arg0-path)
-- [`telar platform [ARG1] [ARG2]`](#telar-platform-arg1-arg2)
-- [`telar plugins`](#telar-plugins)
-- [`telar plugins add PLUGIN`](#telar-plugins-add-plugin)
-- [`telar plugins:inspect PLUGIN...`](#telar-pluginsinspect-plugin)
-- [`telar plugins install PLUGIN`](#telar-plugins-install-plugin)
-- [`telar plugins link PATH`](#telar-plugins-link-path)
-- [`telar plugins remove [PLUGIN]`](#telar-plugins-remove-plugin)
-- [`telar plugins reset`](#telar-plugins-reset)
-- [`telar plugins uninstall [PLUGIN]`](#telar-plugins-uninstall-plugin)
-- [`telar plugins unlink [PLUGIN]`](#telar-plugins-unlink-plugin)
-- [`telar plugins update`](#telar-plugins-update)
-- [`telar run`](#telar-run)
-- [`telar seal [FILE]`](#telar-seal-file)
-- [`telar service [CALL] [PATH]`](#telar-service-call-path)
-- [`telar solution`](#telar-solution)
-- [`telar sync [TARGET]`](#telar-sync-target)
+* [`telar create SOLUTION`](#telar-create-solution)
+* [`telar help [COMMAND]`](#telar-help-command)
+* [`telar html [ARG0] [PATH]`](#telar-html-arg0-path)
+* [`telar platform [ARG1] [ARG2]`](#telar-platform-arg1-arg2)
+* [`telar plugins`](#telar-plugins)
+* [`telar plugins add PLUGIN`](#telar-plugins-add-plugin)
+* [`telar plugins:inspect PLUGIN...`](#telar-pluginsinspect-plugin)
+* [`telar plugins install PLUGIN`](#telar-plugins-install-plugin)
+* [`telar plugins link PATH`](#telar-plugins-link-path)
+* [`telar plugins remove [PLUGIN]`](#telar-plugins-remove-plugin)
+* [`telar plugins reset`](#telar-plugins-reset)
+* [`telar plugins uninstall [PLUGIN]`](#telar-plugins-uninstall-plugin)
+* [`telar plugins unlink [PLUGIN]`](#telar-plugins-unlink-plugin)
+* [`telar plugins update`](#telar-plugins-update)
+* [`telar run`](#telar-run)
+* [`telar seal [FILE]`](#telar-seal-file)
+* [`telar service [CALL] [PATH]`](#telar-service-call-path)
+* [`telar solution`](#telar-solution)
+* [`telar sync [TARGET]`](#telar-sync-target)
 
 ## `telar create SOLUTION`
 
@@ -81,7 +77,7 @@ EXAMPLES
   $ telar create telar-social
 ```
 
-_See code: [src/commands/create.ts](https://github.com/Qolzam/telar-cli-js/blob/v0.20.20/src/commands/create.ts)_
+_See code: [src/commands/create.ts](https://github.com/Qolzam/telar-cli-js/blob/v0.20.21/src/commands/create.ts)_
 
 ## `telar help [COMMAND]`
 
@@ -121,7 +117,7 @@ EXAMPLES
   $ telar html compile ./auth
 ```
 
-_See code: [src/commands/html.ts](https://github.com/Qolzam/telar-cli-js/blob/v0.20.20/src/commands/html.ts)_
+_See code: [src/commands/html.ts](https://github.com/Qolzam/telar-cli-js/blob/v0.20.21/src/commands/html.ts)_
 
 ## `telar platform [ARG1] [ARG2]`
 
@@ -143,7 +139,7 @@ EXAMPLES
   $ telar platform pull https://github.com/Qolzam/platforms.git
 ```
 
-_See code: [src/commands/platform.ts](https://github.com/Qolzam/telar-cli-js/blob/v0.20.20/src/commands/platform.ts)_
+_See code: [src/commands/platform.ts](https://github.com/Qolzam/telar-cli-js/blob/v0.20.21/src/commands/platform.ts)_
 
 ## `telar plugins`
 
@@ -455,7 +451,7 @@ EXAMPLES
   $ telar run
 ```
 
-_See code: [src/commands/run.ts](https://github.com/Qolzam/telar-cli-js/blob/v0.20.20/src/commands/run.ts)_
+_See code: [src/commands/run.ts](https://github.com/Qolzam/telar-cli-js/blob/v0.20.21/src/commands/run.ts)_
 
 ## `telar seal [FILE]`
 
@@ -484,7 +480,7 @@ EXAMPLES
     telar seal --gen secret --pk-base64
 ```
 
-_See code: [src/commands/seal.ts](https://github.com/Qolzam/telar-cli-js/blob/v0.20.20/src/commands/seal.ts)_
+_See code: [src/commands/seal.ts](https://github.com/Qolzam/telar-cli-js/blob/v0.20.21/src/commands/seal.ts)_
 
 ## `telar service [CALL] [PATH]`
 
@@ -505,7 +501,7 @@ EXAMPLES
   $ telar service run .
 ```
 
-_See code: [src/commands/service.ts](https://github.com/Qolzam/telar-cli-js/blob/v0.20.20/src/commands/service.ts)_
+_See code: [src/commands/service.ts](https://github.com/Qolzam/telar-cli-js/blob/v0.20.21/src/commands/service.ts)_
 
 ## `telar solution`
 
@@ -525,7 +521,7 @@ EXAMPLES
   $ telar solution
 ```
 
-_See code: [src/commands/solution.ts](https://github.com/Qolzam/telar-cli-js/blob/v0.20.20/src/commands/solution.ts)_
+_See code: [src/commands/solution.ts](https://github.com/Qolzam/telar-cli-js/blob/v0.20.21/src/commands/solution.ts)_
 
 ## `telar sync [TARGET]`
 
@@ -546,6 +542,5 @@ EXAMPLES
   $ telar sync vercel
 ```
 
-_See code: [src/commands/sync.ts](https://github.com/Qolzam/telar-cli-js/blob/v0.20.20/src/commands/sync.ts)_
-
+_See code: [src/commands/sync.ts](https://github.com/Qolzam/telar-cli-js/blob/v0.20.21/src/commands/sync.ts)_
 <!-- commandsstop -->

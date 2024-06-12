@@ -3,7 +3,7 @@ import {ForkOptions, exec, fork} from 'node:child_process'
 import {readFile, writeFile} from 'node:fs/promises'
 import * as path from 'node:path'
 
-import {asyncSend, gitClone, logger} from '../../helpers.js'
+import {asyncSend, gitDownload, logger} from '../../helpers.js'
 import evt from '../common/events.js'
 import {readJsonFile} from '../jsonfile.js'
 import {ServiceCache} from './service.cache.js'
@@ -28,7 +28,7 @@ export const ServiceProcess = {
     if (serviceTemplate.repositories.length > 0 && callMethod === 'setup') {
       const cloneList$: Promise<void>[] = []
       for (const repo of serviceTemplate.repositories) {
-        cloneList$.push(gitClone(repo.url, path.join(projectPath, repo.name)))
+        cloneList$.push(gitDownload(repo.url, path.join(projectPath, repo.name)))
       }
 
       await Promise.all(cloneList$)
