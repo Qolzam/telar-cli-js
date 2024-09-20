@@ -124,7 +124,7 @@ export const checkDirCreate = async (dir: string) => {
 }
 
 // a function run git clone command async using exec of child_process
-export const gitClone = async (targetRepo: string, dir: string) =>
+export const gitClone = async (targetRepo: string, dir: string): Promise<unknown> =>
   new Promise((resolve, reject) => {
     // check if git is installed
     exec('git --version', (error) => {

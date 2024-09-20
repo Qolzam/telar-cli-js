@@ -5,6 +5,7 @@ import {mkdtemp, writeFile} from 'node:fs/promises'
 import * as os from 'node:os'
 import * as path from 'node:path'
 import pAll from 'p-all'
+import prompt from 'prompts'
 
 import {getServicePath, gitDownload, logger} from '../helpers.js'
 import SolutionService from '../pkg/common/solution.js'
@@ -105,12 +106,21 @@ export default class Create extends Command {
       await this.setupRun()
     } catch (error) {
       if (error instanceof Error) {
-        this.log(`An unexpected error happened.`)
         this.error(error)
       } else {
         console.error(error)
       }
     }
+  }
+
+  async selectServices(servicesName: Array<string>) {
+    const {selectedServices} = await prompt({
+      choices: servicesName.map((serviceName) => ({title: serviceName, value: serviceName})),
+      message: 'Select services to create',
+      name: 'selectedServices',
+      type: 'multiselect',
+    })
+    return selectedServices
   }
 
   async setupRun() {
@@ -170,8 +180,6 @@ export default class Create extends Command {
       servicePathExist$.push(fs.pathExists(path.join(copyCreateDir, 'templates', serviceName)))
     }
 
-    const solutionServices = solutionConfig.services
-
     const servicesPathExist = await Promise.all(servicePathExist$)
     const serviceInextPathNotExist = servicesPathExist.findIndex((s) => !s)
     if (serviceInextPathNotExist > -1) {
@@ -180,10 +188,23 @@ export default class Create extends Command {
       )
     }
 
+    // display a prompt to select the services by user
+    const selectedServices = await this.selectServices(servicesName)
+    if (!selectedServices) {
+      this.error('No services selected')
+    }
+
+    // filter `solutionConfig.services` by `selectedServices` and map as an object
+    const solutionServices: {[key: string]: any} = {}
+    for (const serviceName of selectedServices) {
+      solutionServices[serviceName] = solutionConfig.services[serviceName]
+    }
+
+    solutionConfig.services = {...solutionServices}
     try {
       // copy service from temporary directory to the project directory
       const serviceCopyToSolutionRoot$ = []
-      for (const serviceName of servicesName) {
+      for (const serviceName of selectedServices) {
         const servicePath = getServicePath(solutionServices[serviceName].worker, projectPath, serviceName)
         serviceCopyToSolutionRoot$.push(fs.copy(path.join(copyCreateDir, 'templates', serviceName), servicePath))
       }
@@ -199,7 +220,7 @@ export default class Create extends Command {
 
     // run setup command for all services
     const setupServices$ = []
-    for (const serviceName of servicesName) {
+    for (const serviceName of selectedServices) {
       const servicePath = getServicePath(solutionServices[serviceName].worker, projectPath, serviceName)
       setupServices$.push(() =>
         ServiceProcess.setupService(projectPath, servicePath, solutionServices[serviceName].config),
@@ -220,8 +241,7 @@ export default class Create extends Command {
     await fs.remove(copyCreateDir)
     this.log('=======================')
     this.log(`🎉 Services setup is done! Use commands below to start services.
-
-$ cd ${projectPath}
+$ cd ${solutionName}
 $ telar solution`)
     this.log('=======================')
     this.exit(0)

@@ -1,6 +1,6 @@
 {
   "name": "telar-cli",
-  "version": "0.20.21",
+  "version": "0.20.27",
   "description": "Telar development tools",
   "author": "amir@telar.dev",
   "bin": {
@@ -32,6 +32,7 @@
     "p-all": "^5.0.0",
     "package-up": "^5.0.0",
     "portfinder": "^1.0.32",
+    "prompts": "^2.4.2",
     "resolve-from": "^5.0.0",
     "semver": "^7.6.2",
     "socket.io": "^4.7.5",
@@ -51,6 +52,7 @@
     "@types/js-yaml": "^4.0.9",
     "@types/mocha": "^10",
     "@types/node": "^18",
+    "@types/prompts": "^2.4.9",
     "@types/yargs-parser": "^21.0.3",
     "chai": "^4",
     "eslint": "^8",

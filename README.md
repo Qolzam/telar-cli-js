@@ -20,7 +20,7 @@ $ npm install -g telar-cli
 $ telar COMMAND
 running command...
 $ telar (--version)
-telar-cli/0.20.21 darwin-arm64 node-v21.5.0
+telar-cli/0.20.26 darwin-arm64 node-v21.5.0
 $ telar --help [COMMAND]
 USAGE
   $ telar COMMAND
@@ -48,7 +48,7 @@ USAGE
 * [`telar run`](#telar-run)
 * [`telar seal [FILE]`](#telar-seal-file)
 * [`telar service [CALL] [PATH]`](#telar-service-call-path)
-* [`telar solution`](#telar-solution)
+* [`telar solution [COMMAND] [SERVICE]`](#telar-solution-command-service)
 * [`telar sync [TARGET]`](#telar-sync-target)
 
 ## `telar create SOLUTION`
@@ -77,7 +77,7 @@ EXAMPLES
   $ telar create telar-social
 ```
 
-_See code: [src/commands/create.ts](https://github.com/Qolzam/telar-cli-js/blob/v0.20.21/src/commands/create.ts)_
+_See code: [src/commands/create.ts](https://github.com/Qolzam/telar-cli-js/blob/v0.20.26/src/commands/create.ts)_
 
 ## `telar help [COMMAND]`
 
@@ -117,7 +117,7 @@ EXAMPLES
   $ telar html compile ./auth
 ```
 
-_See code: [src/commands/html.ts](https://github.com/Qolzam/telar-cli-js/blob/v0.20.21/src/commands/html.ts)_
+_See code: [src/commands/html.ts](https://github.com/Qolzam/telar-cli-js/blob/v0.20.26/src/commands/html.ts)_
 
 ## `telar platform [ARG1] [ARG2]`
 
@@ -139,7 +139,7 @@ EXAMPLES
   $ telar platform pull https://github.com/Qolzam/platforms.git
 ```
 
-_See code: [src/commands/platform.ts](https://github.com/Qolzam/telar-cli-js/blob/v0.20.21/src/commands/platform.ts)_
+_See code: [src/commands/platform.ts](https://github.com/Qolzam/telar-cli-js/blob/v0.20.26/src/commands/platform.ts)_
 
 ## `telar plugins`
 
@@ -451,7 +451,7 @@ EXAMPLES
   $ telar run
 ```
 
-_See code: [src/commands/run.ts](https://github.com/Qolzam/telar-cli-js/blob/v0.20.21/src/commands/run.ts)_
+_See code: [src/commands/run.ts](https://github.com/Qolzam/telar-cli-js/blob/v0.20.26/src/commands/run.ts)_
 
 ## `telar seal [FILE]`
 
@@ -480,7 +480,7 @@ EXAMPLES
     telar seal --gen secret --pk-base64
 ```
 
-_See code: [src/commands/seal.ts](https://github.com/Qolzam/telar-cli-js/blob/v0.20.21/src/commands/seal.ts)_
+_See code: [src/commands/seal.ts](https://github.com/Qolzam/telar-cli-js/blob/v0.20.26/src/commands/seal.ts)_
 
 ## `telar service [CALL] [PATH]`
 
@@ -501,18 +501,23 @@ EXAMPLES
   $ telar service run .
 ```
 
-_See code: [src/commands/service.ts](https://github.com/Qolzam/telar-cli-js/blob/v0.20.21/src/commands/service.ts)_
+_See code: [src/commands/service.ts](https://github.com/Qolzam/telar-cli-js/blob/v0.20.26/src/commands/service.ts)_
 
-## `telar solution`
+## `telar solution [COMMAND] [SERVICE]`
 
 Manage solutions
 
 ```
 USAGE
-  $ telar solution [-h]
+  $ telar solution [COMMAND] [SERVICE] [--exclude <value>] [-h]
+
+ARGUMENTS
+  COMMAND  Command to run
+  SERVICE  Service name
 
 FLAGS
-  -h, --help  Show CLI help.
+  -h, --help                Show CLI help.
+      --exclude=<value>...  [default: ] exclude a service
 
 DESCRIPTION
   Manage solutions
@@ -521,7 +526,7 @@ EXAMPLES
   $ telar solution
 ```
 
-_See code: [src/commands/solution.ts](https://github.com/Qolzam/telar-cli-js/blob/v0.20.21/src/commands/solution.ts)_
+_See code: [src/commands/solution.ts](https://github.com/Qolzam/telar-cli-js/blob/v0.20.26/src/commands/solution.ts)_
 
 ## `telar sync [TARGET]`
 
@@ -542,5 +547,5 @@ EXAMPLES
   $ telar sync vercel
 ```
 
-_See code: [src/commands/sync.ts](https://github.com/Qolzam/telar-cli-js/blob/v0.20.21/src/commands/sync.ts)_
+_See code: [src/commands/sync.ts](https://github.com/Qolzam/telar-cli-js/blob/v0.20.26/src/commands/sync.ts)_
 <!-- commandsstop -->

@@ -1,8 +1,9 @@
 import {ChildProcess} from 'node:child_process'
 
-import {ServiceStatus} from '../common/types.js'
+import {ServiceCallInfo, ServiceStatus} from '../common/types.js'
 
 interface ServiceCacheItem {
+  callInfo?: ServiceCallInfo
   config: {[key: string]: string}
   process?: ChildProcess
   status?: ServiceStatus
@@ -31,6 +32,15 @@ export const ServiceCache = {
    */
   getService(name: string): ServiceCacheItem | undefined {
     return serviceCache[name]
+  },
+
+  /**
+   * Get the call information of a service.
+   * @param name The name of the service.
+   * @return The call information object, if it exists; otherwise undefined.
+   */
+  getServiceCallInfo(name: string): ServiceCallInfo | undefined {
+    return serviceCache[name]?.callInfo
   },
 
   /**
@@ -70,8 +80,22 @@ export const ServiceCache = {
    * @param service The service data.
    * @return void
    */
-  setService(name: string, service: any): void {
-    serviceCache[name] = service
+  setService(name: string, service: ServiceCacheItem | object): void {
+    serviceCache[name] = {...serviceCache[name], ...service}
+  },
+
+  /**
+   * Set the call information of a service.
+   * @param name The name of the service.
+   * @param callInfo The call information object.
+   * @return void
+   */
+  setServiceCallInfo(name: string, callInfo: ServiceCallInfo): void {
+    if (serviceCache[name]) {
+      serviceCache[name].callInfo = callInfo
+    } else {
+      console.error(`Service '${name}' does not exist.`)
+    }
   },
 
   /**

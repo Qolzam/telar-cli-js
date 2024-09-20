@@ -3,32 +3,32 @@ import {ForkOptions, exec, fork} from 'node:child_process'
 import {readFile, writeFile} from 'node:fs/promises'
 import * as path from 'node:path'
 
-import {asyncSend, gitDownload, logger} from '../../helpers.js'
+import {asyncSend, gitClone, logger} from '../../helpers.js'
 import evt from '../common/events.js'
+import {ServiceCallInfo, ServiceCallMethod, ServiceConfig} from '../common/types.js'
 import {readJsonFile} from '../jsonfile.js'
 import {ServiceCache} from './service.cache.js'
 import {ServiceTemplate} from './service.types.js'
 import {getVmScript} from './vm.service.call.js'
 
-interface ServiceConfig {
-  [key: string]: string
-}
-
 export const ServiceProcess = {
   async callService(
     projectPath: string,
     root: string,
-    callMethod: 'run' | 'setup',
+    callMethod: ServiceCallMethod,
     config: ServiceConfig,
   ): Promise<void> {
+    // store service call information to recall on error
     const serviceTemplate: ServiceTemplate = await this.getServiceTemplate(root)
     const serviceName = serviceTemplate.name
     logger('info', serviceName, `starting ${callMethod}...`)
+    const callInfo: ServiceCallInfo = {callMethod, config, projectPath, root}
+    ServiceCache.setServiceCallInfo(serviceName, callInfo)
 
     if (serviceTemplate.repositories.length > 0 && callMethod === 'setup') {
-      const cloneList$: Promise<void>[] = []
+      const cloneList$: Promise<unknown>[] = []
       for (const repo of serviceTemplate.repositories) {
-        cloneList$.push(gitDownload(repo.url, path.join(projectPath, repo.name)))
+        cloneList$.push(gitClone(repo.url, path.join(projectPath, repo.name)))
       }
 
       await Promise.all(cloneList$)
@@ -40,6 +40,7 @@ export const ServiceProcess = {
     const {content, syntax} = this.detectCmdOrFileSyntax(serviceTemplate, callMethod)
     if (syntax === 'cmd') {
       const servicePath = root
+
       return this.callServiceByExec(serviceName, servicePath, content)
     }
 
@@ -62,6 +63,7 @@ export const ServiceProcess = {
           if (err) {
             logger('error', serviceName, `Error occurred:`)
             console.log(err.message)
+            this.handleServiceError(serviceName, err)
             reject(err)
           } else if (stdout) {
             logger('info', serviceName, `Stdout: ${stdout}`)
@@ -119,6 +121,7 @@ export const ServiceProcess = {
       }
 
       serviceProcess.on('error', (err: Error) => {
+        this.handleServiceError(serviceName, err)
         logger('error', serviceName, `Error occurred:`)
         console.log(err.message)
         reject(err)
@@ -157,7 +160,12 @@ export const ServiceProcess = {
       ServiceCache.setProcess(serviceName, serviceProcess)
     })
   },
-
+  /**
+   * Create a VM script for a service.
+   * @param filePath The path to the file to be run.
+   * @param fileName The name of the file to be run.
+   * @returns The path to the VM script.
+   */
   async createVmScript(filePath: string, fileName: string) {
     const sourceFilePath = path.join(filePath, fileName)
     const sourceContent = await readFile(sourceFilePath, {encoding: 'utf8'})
@@ -170,7 +178,6 @@ export const ServiceProcess = {
     await writeFile(vmFilePath, vmContent, {encoding: 'utf8'})
     return {path: vmFilePath}
   },
-
   detectCmdOrFileSyntax(template: ServiceTemplate, field: 'run' | 'setup') {
     const isCmd = template[field].startsWith('cmd:')
     const isFile = template[field].startsWith('file:')
@@ -196,6 +203,16 @@ export const ServiceProcess = {
     return readJsonFile(serviceTemplatePath, {encoding: 'utf8'}) as Promise<ServiceTemplate>
   },
 
+  handleServiceError(serviceName: string, error: Error): void {
+    logger('error', serviceName, `Error occurred: ${error.message}`)
+    ServiceCache.setServiceStatus(serviceName, 'failed')
+    // if service config reset set to `always` then recall the service
+    const serviceConfig = ServiceCache.getConfig(serviceName)
+    if (serviceConfig?.reset === 'always') {
+      this.recallService(serviceName)
+    }
+  },
+
   handleServiceMessage(action: Record<string, unknown>, serviceName: string): void {
     if (action.type === 'reject') {
       logger('error', `${serviceName}:rejected`, JSON.stringify(action.payload))
@@ -207,6 +224,13 @@ export const ServiceProcess = {
       if (action.payload) {
         logger('info', `${serviceName}:ready`, (action.payload as Record<string, string>).log)
       }
+    }
+  },
+
+  recallService(serviceName: string): void {
+    const callInfo = ServiceCache.getServiceCallInfo(serviceName)
+    if (callInfo) {
+      this.callService(callInfo.projectPath, callInfo.root, callInfo.callMethod, callInfo.config)
     }
   },
 
@@ -233,7 +257,6 @@ export const ServiceProcess = {
       await Promise.all(stopServicesPromise)
     }
   },
-
   verifyAndFixURL(url: string) {
     // Check if the URL starts with a valid scheme or is a relative path
     if (!/^file:|^\/|^\.\./.test(url)) {

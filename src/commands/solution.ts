@@ -4,6 +4,7 @@ import {mkdtemp} from 'node:fs/promises'
 import os from 'node:os'
 import * as path from 'node:path'
 import pAll from 'p-all'
+import prompt from 'prompts'
 
 import {getServicePath, gitDownload} from '../helpers.js'
 import {readJsonFile} from '../pkg/jsonfile.js'
@@ -27,6 +28,7 @@ export default class Solution extends Command {
   static examples = ['$ telar solution']
 
   static flags = {
+    exclude: Flags.string({default: [], description: 'exclude a service', multiple: true}),
     // Help
     help: Flags.help({char: 'h'}),
   }
@@ -54,10 +56,15 @@ export default class Solution extends Command {
       this.error('Service name is required')
     }
 
-    const {solutionName, solutionPath, solutionPathType} = manifest as {
-      solutionName: string
-      solutionPath: string
-      solutionPathType: string
+    // prompt a question to confirm the action
+    const {confirm} = await prompt({
+      initial: true,
+      message: 'Are you sure you want to recreate the service?',
+      name: 'confirm',
+      type: 'confirm',
+    })
+    if (!confirm) {
+      return
     }
 
     const {services} = manifest[currentEnv] as {
@@ -95,11 +102,24 @@ export default class Solution extends Command {
     this.log('-------------------------------------------')
     this.log(`🎉 Service [${serviceName}] setup is done!`)
     this.log('-------------------------------------------')
+
+    const {confirmRun} = await prompt({
+      initial: true,
+      message: 'Do you want to run the solution?',
+      name: 'confirmRun',
+      type: 'confirm',
+    })
+    if (confirmRun) {
+      await this.runSolution(manifest, currentEnv, projectPath)
+    }
+
+    this.exit(0)
   }
 
   async run() {
     const currentEnv = process.env.TELAR_ENV || defaultTelarEnv
     const projectPath = path.resolve('./')
+    const {flags} = await this.parse(Solution)
 
     // load telar manifest
     let manifest: Record<string, unknown> = {}
@@ -116,35 +136,22 @@ export default class Solution extends Command {
     // otherwise, run the command
     const {args} = await this.parse(Solution)
     if (!args.command || args.command === 'run') {
-      await this.runSolution(manifest, currentEnv, projectPath)
+      await this.runSolution(manifest, currentEnv, projectPath, flags.exclude)
     } else if (args.command === 'recreate') {
       await this.recreateService(manifest, currentEnv, projectPath, args.service)
     }
-
-    // Wait for setup to finish
-    const stdin = process.openStdin()
-    stdin.on('keypress', async (chunk, key) => {
-      if (key && key.ctrl && key.name === 'c') {
-        // stop services
-        await ServiceProcess.stopServices()
-        this.log('All services stopped by [keypress]')
-
-        // TODO: Check the services are down the exit
-        this.exit(0)
-      }
-    })
-    await new Promise(() => {
-      this.log('-------------------------------------------')
-      console.log('Press ctrl+c to exit!')
-      this.log('-------------------------------------------')
-    })
   }
 
-  async runSolution(manifest: Record<string, unknown>, currentEnv: string, projectPath: string) {
+  async runSolution(
+    manifest: Record<string, unknown>,
+    currentEnv: string,
+    projectPath: string,
+    exclude: string[] = [],
+  ) {
     const {services} = manifest[currentEnv] as {
       services: {[key: string]: {config: {[key: string]: string}; worker: boolean}}
     }
-    const servicesName = Object.keys(services)
+    const servicesName = Object.keys(services).filter((s) => !exclude.includes(s))
     const servicePathExist$ = []
     for (const serviceName of servicesName) {
       const servicePath = getServicePath(services[serviceName].worker, projectPath, serviceName)
@@ -177,10 +184,31 @@ export default class Solution extends Command {
       this.log('-------------------------------------------')
       this.log('🔥 All Services are running!')
       this.log('-------------------------------------------')
+      await this.waitForClose()
     } catch (error: unknown) {
       if (error instanceof Error) {
         this.log(error.message)
       }
     }
+  }
+
+  async waitForClose() {
+    // Wait for setup to finish
+    const stdin = process.openStdin()
+    stdin.on('keypress', async (chunk, key) => {
+      if (key && key.ctrl && key.name === 'c') {
+        // stop services
+        await ServiceProcess.stopServices()
+        this.log('All services stopped by [keypress]')
+
+        // TODO: Check the services are down the exit
+        this.exit(0)
+      }
+    })
+    await new Promise(() => {
+      this.log('-------------------------------------------')
+      console.log('Press ctrl+c to exit!')
+      this.log('-------------------------------------------')
+    })
   }
 }
